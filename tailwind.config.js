@@ -4,13 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#f5f2eb',
-        surface: '#ffffff',
-        primary: '#2c2a26',
-        accent: '#825ff4',
-        danger: '#e5484d',
-        success: '#30a46c',
-        muted: '#78756e',
+        bg:      'rgb(var(--color-bg-rgb) / <alpha-value>)',
+        surface: 'rgb(var(--color-surface-rgb) / <alpha-value>)',
+        primary: 'rgb(var(--color-primary-rgb) / <alpha-value>)',
+        accent:  'rgb(var(--color-accent-rgb) / <alpha-value>)',
+        danger:  'rgb(var(--color-danger-rgb) / <alpha-value>)',
+        success: 'rgb(var(--color-success-rgb) / <alpha-value>)',
+        muted:   'rgb(var(--color-muted-rgb) / <alpha-value>)',
       },
     },
   },

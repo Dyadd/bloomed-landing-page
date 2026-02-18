@@ -1,26 +1,24 @@
 /**
  * graphAnimations.ts
  *
- * Key fixes over v1:
- *  - Particle + edge draw share the same ease -> always in sync
- *  - Ambient has continuous breathing so the graph is never static
- *  - Diagnostic: "marching ants" on broken edge + disconnect flash + bounce-in nodes
- *  - Repair: launch burst at source, connection burst at target, node bounces
- *  - Solidify: wave ripple outward from the repaired edge, nodes bounce with back.out
+ * Scroll-driven GSAP animations for the knowledge graph.
+ *
+ * Three narrative phases:
+ *  - Diagnostic: disparate known nodes light up, rest dim, scanning pulse
+ *  - Learning:   unknown nodes appear, edges form as dotted orange lines
+ *  - Solidify:   green wave, all edges become solid, full graph alive
  *
  * D3 integration:
- *  - getNodePos() / getLiveEdgeLength() read live DOM attributes so repair
- *    and solidify animations stay correct after nodes have been dragged.
+ *  - getNodePos() reads live DOM attributes so animations stay correct
+ *    after nodes have been dragged.
  */
 
 import { gsap } from 'gsap';
 import {
   GRAPH_NODES,
   GRAPH_EDGES,
-  GAP_SOURCE_ID,
-  GAP_TARGET_ID,
-  BROKEN_EDGE_ID,
-  BROKEN_EDGE_LENGTH,
+  KNOWN_NODE_IDS,
+  classifyEdge,
 } from '../data/graphData';
 
 const CATEGORY_COLORS: Record<string, string> = {
@@ -30,18 +28,30 @@ const CATEGORY_COLORS: Record<string, string> = {
   specialty:    '#06b6d4',
 };
 
-let _breathing: gsap.core.Tween | null = null;
-let _pulse:     gsap.core.Tween | null = null;
-let _march:     gsap.core.Tween | null = null;
+const LEARNING_COLOR = '#f97316'; // warm orange for forming connections
 
-function killAll() {
-  _breathing?.kill(); _breathing = null;
-  _pulse?.kill();     _pulse     = null;
-  _march?.kill();     _march     = null;
+/** Read a space-separated RGB value from a CSS custom property, e.g. "44 42 38" */
+function getThemeRgb(varName: string): string {
+  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
 }
 
-const REPAIR_EASE     = 'power2.inOut';
-const REPAIR_DURATION = 1.5;
+/** Build an rgba() string from space-separated RGB + optional alpha */
+function rgba(rgb: string, alpha?: number): string {
+  const [r, g, b] = rgb.split(' ');
+  return alpha !== undefined
+    ? `rgba(${r}, ${g}, ${b}, ${alpha})`
+    : `rgb(${r}, ${g}, ${b})`;
+}
+
+let _breathing: gsap.core.Tween | null = null;
+let _scanPulse: gsap.core.Timeline | null = null;
+let _learningGlow: gsap.core.Tween | null = null;
+
+function killAll() {
+  _breathing?.kill();    _breathing    = null;
+  _scanPulse?.kill();    _scanPulse    = null;
+  _learningGlow?.kill(); _learningGlow = null;
+}
 
 function getNodePos(nodeId: string): { x: number; y: number } {
   const el = document.getElementById(`node-${nodeId}`);
@@ -54,28 +64,27 @@ function getNodePos(nodeId: string): { x: number; y: number } {
   return { x: node?.x ?? 0, y: node?.y ?? 0 };
 }
 
-function getLiveEdgeLength(edgeId: string): number {
-  const el = document.getElementById(`edge-${edgeId}`);
-  if (el) {
-    const x1 = parseFloat(el.getAttribute('x1') ?? '0');
-    const y1 = parseFloat(el.getAttribute('y1') ?? '0');
-    const x2 = parseFloat(el.getAttribute('x2') ?? '0');
-    const y2 = parseFloat(el.getAttribute('y2') ?? '0');
-    const len = Math.round(Math.hypot(x2 - x1, y2 - y1));
-    if (len > 0) return len;
-  }
-  return BROKEN_EDGE_LENGTH;
-}
+// Partition nodes: known (scattered) vs unknown (gaps to fill)
+const knownNodes   = GRAPH_NODES.filter(n => KNOWN_NODE_IDS.has(n.id));
+const unknownNodes = GRAPH_NODES.filter(n => !KNOWN_NODE_IDS.has(n.id));
 
-// AMBIENT — resting state with continuous gentle breathing
+// Partition edges: known (both endpoints known) vs learning (at least one unknown)
+const knownEdges    = GRAPH_EDGES.filter(e => classifyEdge(e) === 'known');
+const learningEdges = GRAPH_EDGES.filter(e => classifyEdge(e) === 'learning');
+
+// ── AMBIENT - resting state with continuous gentle breathing ─────────────────
+
 export function toAmbient(): gsap.core.Timeline {
   killAll();
   const tl = gsap.timeline();
 
+  const primaryRgb = getThemeRgb('--color-primary-rgb');
+  const edgeColor = rgba(primaryRgb, 0.15);
+
   GRAPH_EDGES.forEach(edge => {
     tl.set(`#edge-${edge.id}`, {
       attr: {
-        stroke: 'rgba(44, 42, 38, 0.15)',
+        stroke: edgeColor,
         'stroke-width': 1.5,
         'stroke-dasharray': '9999',
         'stroke-dashoffset': 0,
@@ -89,8 +98,6 @@ export function toAmbient(): gsap.core.Timeline {
     tl.to(`#node-${node.id}-dot`,  { attr: { fill: color, r: 7 },               duration: 0.5, ease: 'power2.out' }, 0);
     tl.to(`#node-${node.id}-ring`, { attr: { r: 13, stroke: color }, opacity: 0.12, duration: 0.5 }, 0);
   });
-
-  tl.set('#repair-particle', { opacity: 0 }, 0);
 
   tl.call(() => {
     _breathing = gsap.to(
@@ -110,215 +117,209 @@ export function toAmbient(): gsap.core.Timeline {
   return tl;
 }
 
-// DIAGNOSTIC — the gap is revealed: broken edge + urgent pulse
+// ── DIAGNOSTIC - "Bloomed maps where you are" ───────────────────────────────
+//  Disparate known nodes light up bright, everything else dims down.
+//  Shows fragmented knowledge - you know some things but they're scattered.
+
 export function toDiagnostic(): gsap.core.Timeline {
   killAll();
   const tl = gsap.timeline();
 
-  GRAPH_EDGES.forEach(edge => {
-    if (edge.id !== BROKEN_EDGE_ID) {
-      tl.to(`#edge-${edge.id}`, { attr: { stroke: 'rgba(44, 42, 38, 0.05)' }, duration: 0.6 }, 0);
-    }
-  });
-  GRAPH_NODES.forEach(node => {
-    if (node.id !== GAP_SOURCE_ID && node.id !== GAP_TARGET_ID) {
-      tl.to(`#node-${node.id}`, { opacity: 0.14, duration: 0.5 }, 0);
-    }
+  const primaryRgb = getThemeRgb('--color-primary-rgb');
+
+  // Known nodes pop up bright with their category color, staggered
+  knownNodes.forEach((node, i) => {
+    const color = CATEGORY_COLORS[node.category];
+    const delay = i * 0.12;
+    tl.to(`#node-${node.id}`, { opacity: 1, duration: 0.5 }, delay);
+    tl.to(`#node-${node.id}-dot`, {
+      attr: { fill: color, r: 10 },
+      duration: 0.4,
+      ease: 'back.out(2)',
+    }, delay + 0.05);
+    tl.to(`#node-${node.id}-dot`, { attr: { r: 8 }, duration: 0.25 }, delay + 0.45);
+    tl.to(`#node-${node.id}-ring`, {
+      attr: { r: 15, stroke: color },
+      opacity: 0.3,
+      duration: 0.4,
+    }, delay + 0.05);
   });
 
-  // Disconnect flash — bright accent then snaps to danger red
-  tl.to(`#edge-${BROKEN_EDGE_ID}`, {
-    attr: { stroke: '#825ff4', 'stroke-width': 3 },
-    duration: 0.12,
-    ease: 'power3.out',
-  }, 0.1);
-  tl.to(`#edge-${BROKEN_EDGE_ID}`, {
-    attr: { stroke: '#e5484d', 'stroke-width': 2.5 },
-    duration: 0.25,
-    ease: 'power2.in',
-  }, 0.22);
-  tl.set(`#edge-${BROKEN_EDGE_ID}`, {
-    attr: { 'stroke-dasharray': '8 6', 'stroke-dashoffset': 0 },
-  }, 0.26);
+  // Unknown nodes dim out
+  unknownNodes.forEach(node => {
+    tl.to(`#node-${node.id}`, { opacity: 0.12, duration: 0.5 }, 0);
+    tl.to(`#node-${node.id}-ring`, { opacity: 0.02, duration: 0.4 }, 0);
+  });
 
-  // Marching ants on the broken edge
-  tl.call(() => {
-    _march = gsap.to(`#edge-${BROKEN_EDGE_ID}`, {
-      attr: { 'stroke-dashoffset': -14 },
+  // Known edges (anatomy-physiology is the only one) visible
+  knownEdges.forEach(edge => {
+    tl.to(`#edge-${edge.id}`, {
+      attr: { stroke: rgba(primaryRgb, 0.2), 'stroke-width': 1.5 },
       duration: 0.5,
-      repeat: -1,
-      ease: 'none',
-    });
-  }, [], 0.28);
+    }, 0);
+  });
 
-  // Gap source (Pathology) bounces in red
-  tl.to(`#node-${GAP_SOURCE_ID}`, { opacity: 1, duration: 0.2 }, 0.1);
-  tl.to(`#node-${GAP_SOURCE_ID}-dot`, {
-    attr: { fill: '#e5484d', r: 12 },
-    duration: 0.35,
-    ease: 'back.out(2)',
-  }, 0.2);
-  tl.to(`#node-${GAP_SOURCE_ID}-dot`, { attr: { r: 9 }, duration: 0.2 }, 0.55);
-  tl.to(`#node-${GAP_SOURCE_ID}-ring`, { attr: { r: 14, stroke: '#e5484d' }, opacity: 0.3, duration: 0.3 }, 0.2);
+  // Learning edges nearly invisible
+  learningEdges.forEach(edge => {
+    tl.to(`#edge-${edge.id}`, {
+      attr: { stroke: rgba(primaryRgb, 0.03), 'stroke-width': 1 },
+      duration: 0.5,
+    }, 0);
+  });
 
-  // Gap target (Clinical Reasoning) bounces in red
-  tl.to(`#node-${GAP_TARGET_ID}`, { opacity: 1, duration: 0.2 }, 0.22);
-  tl.to(`#node-${GAP_TARGET_ID}-dot`, {
-    attr: { fill: '#e5484d', r: 12 },
-    duration: 0.35,
-    ease: 'back.out(2)',
-  }, 0.32);
-  tl.to(`#node-${GAP_TARGET_ID}-dot`, { attr: { r: 9 }, duration: 0.2 }, 0.67);
-  tl.to(`#node-${GAP_TARGET_ID}-ring`, { attr: { r: 14, stroke: '#e5484d' }, opacity: 0.3, duration: 0.3 }, 0.32);
-
-  // Repeating pulse on both gap rings
+  // Scanning pulse: known nodes get a sequential ring flare (one after another)
   tl.call(() => {
-    _pulse = gsap.to(
-      [`#node-${GAP_SOURCE_ID}-ring`, `#node-${GAP_TARGET_ID}-ring`],
-      {
-        attr: { r: 24, stroke: '#e5484d' },
-        opacity: 0.5,
-        duration: 0.85,
-        repeat: -1,
-        yoyo: true,
+    const scanTl = gsap.timeline({ repeat: -1 });
+    knownNodes.forEach((node, i) => {
+      const color = CATEGORY_COLORS[node.category];
+      scanTl.to(`#node-${node.id}-ring`, {
+        attr: { r: 26 },
+        opacity: 0.55,
+        duration: 0.4,
         ease: 'power2.out',
-      }
-    );
-  }, [], 0.75);
+      }, i * 0.55);
+      scanTl.to(`#node-${node.id}-ring`, {
+        attr: { r: 15, stroke: color },
+        opacity: 0.25,
+        duration: 0.6,
+        ease: 'power2.inOut',
+      }, i * 0.55 + 0.4);
+    });
+    _scanPulse = scanTl;
+  }, [], 0.7);
 
   return tl;
 }
 
-// REPAIR — the connection is rebuilt: synced particle + edge draw
-export function toRepair(): gsap.core.Timeline {
-  killAll();
+// ── LEARNING - "Connections are forming" ─────────────────────────────────────
+//  Known nodes stay visible. Unknown nodes appear. Learning edges form as
+//  dotted orange lines to show knowledge actively being built.
 
+export function toLearning(): gsap.core.Timeline {
+  killAll();
   const tl = gsap.timeline();
 
-  const srcPos = getNodePos(GAP_SOURCE_ID);
-  const tgtPos = getNodePos(GAP_TARGET_ID);
-  const edgeLen = getLiveEdgeLength(BROKEN_EDGE_ID);
+  const primaryRgb = getThemeRgb('--color-primary-rgb');
 
-  const DRAW_START   = 0.35;
-  const ARRIVAL_TIME = DRAW_START + REPAIR_DURATION;
-
-  GRAPH_EDGES.forEach(edge => {
-    if (edge.id !== BROKEN_EDGE_ID) {
-      tl.to(`#edge-${edge.id}`, { attr: { stroke: 'rgba(44, 42, 38, 0.08)' }, duration: 0.45 }, 0);
-    }
+  // Known nodes stay visible but step back slightly
+  knownNodes.forEach(node => {
+    const color = CATEGORY_COLORS[node.category];
+    tl.to(`#node-${node.id}`, { opacity: 0.75, duration: 0.45 }, 0);
+    tl.to(`#node-${node.id}-dot`, {
+      attr: { fill: color, r: 7 },
+      duration: 0.4,
+    }, 0);
+    tl.to(`#node-${node.id}-ring`, {
+      attr: { r: 12, stroke: color },
+      opacity: 0.12,
+      duration: 0.4,
+    }, 0);
   });
-  GRAPH_NODES.forEach(node => {
-    if (node.id !== GAP_SOURCE_ID && node.id !== GAP_TARGET_ID) {
-      tl.to(`#node-${node.id}`, { opacity: 0.6, duration: 0.45 }, 0);
-    }
+
+  // Known edges stay solid at medium opacity
+  knownEdges.forEach(edge => {
+    tl.to(`#edge-${edge.id}`, {
+      attr: { stroke: rgba(primaryRgb, 0.15), 'stroke-width': 1.5, 'stroke-dasharray': '9999' },
+      duration: 0.45,
+    }, 0);
   });
 
-  // Source node: transition to accent purple + launch burst
-  tl.to(`#node-${GAP_SOURCE_ID}-dot`,  { attr: { fill: '#825ff4', r: 8 },           duration: 0.35 }, 0.05);
-  tl.to(`#node-${GAP_SOURCE_ID}-ring`, { attr: { r: 14, stroke: '#825ff4' }, opacity: 0.3, duration: 0.35 }, 0.05);
+  // Unknown nodes appear with orange learning color, staggered bounce-in
+  unknownNodes.forEach((node, i) => {
+    const delay = 0.2 + i * 0.08;
+    tl.to(`#node-${node.id}`, { opacity: 1, duration: 0.35 }, delay);
+    tl.to(`#node-${node.id}-dot`, {
+      attr: { fill: LEARNING_COLOR, r: 10 },
+      duration: 0.4,
+      ease: 'back.out(2)',
+    }, delay);
+    tl.to(`#node-${node.id}-dot`, {
+      attr: { r: 7 },
+      duration: 0.25,
+      ease: 'power2.inOut',
+    }, delay + 0.4);
+    tl.to(`#node-${node.id}-ring`, {
+      attr: { r: 15, stroke: LEARNING_COLOR },
+      opacity: 0.3,
+      duration: 0.4,
+      ease: 'power2.out',
+    }, delay);
+  });
 
-  tl.to(`#node-${GAP_SOURCE_ID}-ring`, {
-    attr: { r: 30 },
-    opacity: 0,
-    duration: 0.5,
-    ease: 'power2.out',
-  }, DRAW_START - 0.05);
-  tl.to(`#node-${GAP_SOURCE_ID}-dot`, { attr: { r: 11 }, duration: 0.12, ease: 'power2.out' }, DRAW_START);
-  tl.to(`#node-${GAP_SOURCE_ID}-dot`, { attr: { r: 8 },  duration: 0.2  }, DRAW_START + 0.12);
-  tl.set(`#node-${GAP_SOURCE_ID}-ring`, { attr: { r: 14 }, opacity: 0.3 }, DRAW_START + 0.5);
+  // Learning edges appear as dotted orange lines (connections forming)
+  learningEdges.forEach((edge, i) => {
+    const delay = 0.35 + i * 0.06;
+    tl.set(`#edge-${edge.id}`, {
+      attr: { 'stroke-dasharray': '6 5' },
+    }, delay);
+    tl.to(`#edge-${edge.id}`, {
+      attr: { stroke: LEARNING_COLOR, 'stroke-width': 1.8 },
+      opacity: 0.55,
+      duration: 0.5,
+    }, delay);
+  });
 
-  // Set up broken edge for draw animation
-  tl.set(`#edge-${BROKEN_EDGE_ID}`, {
-    attr: {
-      stroke: '#825ff4',
-      'stroke-width': 2.5,
-      'stroke-dasharray': edgeLen,
-      'stroke-dashoffset': edgeLen,
-    },
-  }, 0.25);
-
-  // Particle appears at source
-  tl.set('#repair-particle', { attr: { cx: srcPos.x, cy: srcPos.y, r: 5 }, opacity: 0 }, DRAW_START - 0.05);
-  tl.to('#repair-particle', { opacity: 1, duration: 0.15 }, DRAW_START);
-
-  // THE SYNC: particle and edge draw share the exact same ease + duration
-  tl.to('#repair-particle', {
-    attr: { cx: tgtPos.x, cy: tgtPos.y },
-    duration: REPAIR_DURATION,
-    ease: REPAIR_EASE,
-  }, DRAW_START);
-
-  tl.to(`#edge-${BROKEN_EDGE_ID}`, {
-    attr: { 'stroke-dashoffset': 0 },
-    duration: REPAIR_DURATION,
-    ease: REPAIR_EASE,
-  }, DRAW_START);
-
-  tl.to('#repair-particle', { opacity: 0, attr: { r: 2 }, duration: 0.2 }, ARRIVAL_TIME - 0.2);
-
-  // Connection burst when edge arrives at target
-  tl.to(`#node-${GAP_TARGET_ID}-ring`, {
-    attr: { r: 38, stroke: '#825ff4' },
-    opacity: 0,
-    duration: 0.55,
-    ease: 'power2.out',
-  }, ARRIVAL_TIME);
-
-  tl.to(`#node-${GAP_TARGET_ID}-dot`, {
-    attr: { fill: '#825ff4', r: 13 },
-    duration: 0.35,
-    ease: 'back.out(2.5)',
-  }, ARRIVAL_TIME + 0.02);
-  tl.to(`#node-${GAP_TARGET_ID}-dot`, { attr: { r: 9 }, duration: 0.3, ease: 'power2.inOut' }, ARRIVAL_TIME + 0.4);
-
-  tl.set(`#node-${GAP_TARGET_ID}-ring`, { attr: { r: 16, stroke: '#825ff4' }, opacity: 0 }, ARRIVAL_TIME + 0.05);
-  tl.to(`#node-${GAP_TARGET_ID}-ring`, { opacity: 0.45, duration: 0.45 }, ARRIVAL_TIME + 0.2);
+  // Breathing glow on the learning (unknown) nodes
+  tl.call(() => {
+    _learningGlow = gsap.to(
+      unknownNodes.map(n => `#node-${n.id}-ring`),
+      {
+        attr: { r: 21 },
+        opacity: 0.45,
+        duration: 2.0,
+        repeat: -1,
+        yoyo: true,
+        ease: 'sine.inOut',
+        stagger: { each: 0.25, from: 'start' },
+      }
+    );
+  }, [], 0.9);
 
   return tl;
 }
 
-// SOLIDIFY — wave ripple + node bounces, restores breathing
+// ── SOLIDIFY - "Everything is built and reinforced" ──────────────────────────
+//  Green wave from center outward. All nodes flash green then settle to
+//  category colors. All edges become solid. Full graph alive.
+
 export function toSolidify(): gsap.core.Timeline {
   killAll();
   const tl = gsap.timeline();
 
-  tl.set('#repair-particle', { opacity: 0 }, 0);
+  const primaryRgb = getThemeRgb('--color-primary-rgb');
+  const edgeColor = rgba(primaryRgb, 0.22);
 
-  // Broken edge -> bold solid green
-  tl.to(`#edge-${BROKEN_EDGE_ID}`, {
-    attr: { stroke: '#30a46c', 'stroke-width': 3.5, 'stroke-dashoffset': 0 },
-    duration: 0.4,
-    ease: 'power2.out',
-  }, 0);
-  tl.set(`#edge-${BROKEN_EDGE_ID}`, { attr: { 'stroke-dasharray': '9999' } }, 0.35);
-
+  // All edges snap to solid and strengthen with green flash
   GRAPH_EDGES.forEach(edge => {
-    if (edge.id !== BROKEN_EDGE_ID) {
-      tl.to(`#edge-${edge.id}`, {
-        attr: { stroke: 'rgba(44, 42, 38, 0.2)', 'stroke-width': 1.5 },
-        duration: 0.5,
-      }, 0);
-    }
+    tl.to(`#edge-${edge.id}`, {
+      attr: { stroke: '#30a46c', 'stroke-width': 2.5, 'stroke-dasharray': '9999', 'stroke-dashoffset': 0 },
+      opacity: 1,
+      duration: 0.4,
+    }, 0);
+    tl.to(`#edge-${edge.id}`, {
+      attr: { stroke: edgeColor, 'stroke-width': 1.5 },
+      duration: 0.6,
+    }, 0.5);
   });
 
-  // Wave ripple: sort by live distance from repaired edge midpoint
-  const srcPos = getNodePos(GAP_SOURCE_ID);
-  const tgtPos = getNodePos(GAP_TARGET_ID);
-  const midX   = (srcPos.x + tgtPos.x) / 2;
-  const midY   = (srcPos.y + tgtPos.y) / 2;
+  // Wave ripple: sort by distance from graph center
+  const centerX = 370;
+  const centerY = 250;
 
   const waveOrder = [...GRAPH_NODES].sort((a, b) => {
     const pA = getNodePos(a.id);
     const pB = getNodePos(b.id);
-    return Math.hypot(pA.x - midX, pA.y - midY) - Math.hypot(pB.x - midX, pB.y - midY);
+    return Math.hypot(pA.x - centerX, pA.y - centerY) - Math.hypot(pB.x - centerX, pB.y - centerY);
   });
 
   waveOrder.forEach((node, i) => {
     const color = CATEGORY_COLORS[node.category];
     const d = 0.08 + i * 0.08;
 
+    // Fade in to full
     tl.to(`#node-${node.id}`, { opacity: 1, duration: 0.3, ease: 'power2.out' }, d);
 
+    // Green flash then settle to category color
     tl.to(`#node-${node.id}-dot`, {
       attr: { fill: '#30a46c', r: 12 },
       duration: 0.4,
@@ -330,6 +331,7 @@ export function toSolidify(): gsap.core.Timeline {
       ease: 'power2.inOut',
     }, d + 0.45);
 
+    // Ring burst then settle
     tl.to(`#node-${node.id}-ring`, {
       attr: { r: 26, stroke: '#30a46c' },
       opacity: 0.65,
@@ -344,11 +346,8 @@ export function toSolidify(): gsap.core.Timeline {
     }, d + 0.38);
   });
 
+  // After wave completes: restore breathing at slightly higher intensity
   const waveEnd = 0.08 + waveOrder.length * 0.08 + 0.55;
-  tl.to(`#node-${GAP_SOURCE_ID}-dot`, { attr: { fill: '#30a46c' }, duration: 0.25 }, waveEnd);
-  tl.to(`#node-${GAP_TARGET_ID}-dot`, { attr: { fill: '#30a46c' }, duration: 0.25 }, waveEnd);
-  tl.to(`#node-${GAP_SOURCE_ID}-ring`, { attr: { stroke: '#30a46c' }, opacity: 0.22, duration: 0.25 }, waveEnd);
-  tl.to(`#node-${GAP_TARGET_ID}-ring`, { attr: { stroke: '#30a46c' }, opacity: 0.22, duration: 0.25 }, waveEnd);
 
   tl.call(() => {
     _breathing = gsap.to(

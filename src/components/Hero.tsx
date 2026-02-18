@@ -24,15 +24,15 @@ export default function Hero({ onOpenForm }: Props) {
       {/* Accent radial glow from the top */}
       <div
         className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] pointer-events-none opacity-[0.07]"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%, #825ff4, transparent 65%)' }}
+        style={{ background: 'radial-gradient(ellipse at 50% 0%, var(--color-accent), transparent 65%)' }}
       />
 
       <div className="relative max-w-3xl">
         {/* Headline */}
-        <h1 className="hero-headline text-5xl lg:text-7xl font-bold leading-[1.08] mb-6 tracking-tight">
-          <span className="gradient-text">Diagnose your weaknesses.</span>
+        <h1 className="hero-headline font-bold leading-[1.08] mb-6 tracking-tight">
+          <span className="text-2xl lg:text-4xl text-primary">Diagnose your weaknesses.</span>
           <br />
-          <span className="font-accent gradient-text">Master Medicine.</span>
+          <span className="font-accent gradient-text text-6xl lg:text-8xl">Master Medicine.</span>
         </h1>
 
         {/* Sub-heading */}

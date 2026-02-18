@@ -3,9 +3,46 @@
 @tailwind utilities;
 
 :root {
-  --border: rgba(44, 42, 38, 0.12);
-  --text-primary: #2c2a26;
-  --text-secondary: #78756e;
+  /* RGB channels — used by Tailwind for opacity modifier support */
+  --color-bg-rgb: 245 242 235;
+  --color-surface-rgb: 255 255 255;
+  --color-primary-rgb: 44 42 38;
+  --color-accent-rgb: 43 95 196;
+  --color-muted-rgb: 120 117 110;
+  --color-danger-rgb: 229 72 77;
+  --color-success-rgb: 48 164 108;
+
+  /* Composite colors — used in custom CSS */
+  --color-bg: rgb(var(--color-bg-rgb));
+  --color-surface: rgb(var(--color-surface-rgb));
+  --color-primary: rgb(var(--color-primary-rgb));
+  --color-accent: rgb(var(--color-accent-rgb));
+  --color-muted: rgb(var(--color-muted-rgb));
+  --color-danger: rgb(var(--color-danger-rgb));
+  --color-success: rgb(var(--color-success-rgb));
+
+  /* Additional theme colors (CSS-only, no Tailwind opacity needed) */
+  --color-gradient-text: #1a32e0;
+  --color-accent-hover: #4070d6;
+  --color-placeholder: #a09d97;
+  --color-edge: rgba(44, 42, 38, 0.15);
+  --color-label: rgba(44, 42, 38, 0.55);
+}
+
+.dark {
+  --color-bg-rgb: 24 24 32;
+  --color-surface-rgb: 34 34 44;
+  --color-primary-rgb: 240 237 230;
+  --color-accent-rgb: 91 142 232;
+  --color-muted-rgb: 158 154 146;
+  --color-danger-rgb: 229 72 77;
+  --color-success-rgb: 48 164 108;
+
+  --color-gradient-text: #8b9aff;
+  --color-accent-hover: #7aa3f2;
+  --color-placeholder: #6a6660;
+  --color-edge: rgba(240, 237, 230, 0.15);
+  --color-label: rgba(240, 237, 230, 0.55);
 }
 
 html {
@@ -13,22 +50,31 @@ html {
 }
 
 body {
-  background-color: #f5f2eb;
-  color: #2c2a26;
+  background-color: var(--color-bg);
+  color: var(--color-primary);
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Ensure the React root inherits the theme background/text */
+#root,
+#root > div {
+  background-color: var(--color-bg);
+  color: var(--color-primary);
+  transition: background-color 0.3s, color 0.3s;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar { width: 5px; }
-::-webkit-scrollbar-track { background: #f5f2eb; }
-::-webkit-scrollbar-thumb { background: rgba(130, 95, 244, 0.3); border-radius: 3px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(130, 95, 244, 0.5); }
+::-webkit-scrollbar-track { background: var(--color-bg); }
+::-webkit-scrollbar-thumb { background: rgb(var(--color-accent-rgb) / 0.3); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-accent-rgb) / 0.5); }
 
 /* Dot grid background pattern */
 .dot-grid {
-  background-image: radial-gradient(rgba(44, 42, 38, 0.08) 1px, transparent 1px);
+  background-image: radial-gradient(var(--color-edge) 1px, transparent 1px);
   background-size: 32px 32px;
 }
 
@@ -41,18 +87,18 @@ body {
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #825ff4;
+  color: var(--color-accent);
   padding: 5px 12px;
-  border: 1px solid rgba(130, 95, 244, 0.3);
+  border: 1px solid rgb(var(--color-accent-rgb) / 0.3);
   border-radius: 100px;
-  background: rgba(130, 95, 244, 0.06);
+  background: rgb(var(--color-accent-rgb) / 0.06);
 }
 
 .phase-label .dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #825ff4;
+  background: var(--color-accent);
   animation: pulse-dot 2s ease-in-out infinite;
 }
 
@@ -63,10 +109,7 @@ body {
 
 /* Gradient text utility */
 .gradient-text {
-  background: linear-gradient(135deg, #825ff4 0%, #a78bfa 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--color-gradient-text);
 }
 
 /* Buttons */
@@ -75,7 +118,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 13px 26px;
-  background: linear-gradient(135deg, #825ff4, #6c47e0);
+  background: var(--color-accent);
   color: white;
   font-weight: 600;
   font-size: 15px;
@@ -85,8 +128,8 @@ body {
   transition: all 0.2s ease;
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #9b7cf8, #825ff4);
-  box-shadow: 0 0 0 4px rgba(130, 95, 244, 0.15), 0 4px 20px rgba(130, 95, 244, 0.25);
+  background: var(--color-accent-hover);
+  box-shadow: 0 0 0 4px rgb(var(--color-accent-rgb) / 0.15), 0 4px 20px rgb(var(--color-accent-rgb) / 0.25);
   transform: translateY(-1px);
 }
 .btn-primary:active { transform: translateY(0); }
@@ -98,38 +141,38 @@ body {
   gap: 6px;
   padding: 9px 18px;
   background: transparent;
-  color: #78756e;
+  color: var(--color-muted);
   font-weight: 500;
   font-size: 14px;
   border-radius: 8px;
-  border: 1px solid rgba(44, 42, 38, 0.15);
+  border: 1px solid var(--color-edge);
   cursor: pointer;
   transition: all 0.2s ease;
 }
 .btn-ghost:hover {
-  color: #2c2a26;
-  border-color: rgba(44, 42, 38, 0.35);
-  background: rgba(44, 42, 38, 0.04);
+  color: var(--color-primary);
+  border-color: rgb(var(--color-primary-rgb) / 0.35);
+  background: rgb(var(--color-primary-rgb) / 0.04);
 }
 
 /* Form inputs */
 .form-input {
   width: 100%;
   padding: 13px 15px;
-  background: #ffffff;
-  border: 1px solid rgba(44, 42, 38, 0.15);
+  background: var(--color-surface);
+  border: 1px solid var(--color-edge);
   border-radius: 10px;
-  color: #2c2a26;
+  color: var(--color-primary);
   font-size: 15px;
   font-family: inherit;
   transition: border-color 0.2s, box-shadow 0.2s;
   outline: none;
 }
 .form-input:focus {
-  border-color: rgba(130, 95, 244, 0.5);
-  box-shadow: 0 0 0 3px rgba(130, 95, 244, 0.1);
+  border-color: rgb(var(--color-accent-rgb) / 0.5);
+  box-shadow: 0 0 0 3px rgb(var(--color-accent-rgb) / 0.1);
 }
-.form-input::placeholder { color: #a09d97; }
+.form-input::placeholder { color: var(--color-placeholder); }
 
 /* Option card for radio selections */
 .option-card {
@@ -137,8 +180,8 @@ body {
   align-items: flex-start;
   gap: 12px;
   padding: 13px 15px;
-  background: #ffffff;
-  border: 1px solid rgba(44, 42, 38, 0.1);
+  background: var(--color-surface);
+  border: 1px solid rgb(var(--color-primary-rgb) / 0.1);
   border-radius: 10px;
   cursor: pointer;
   transition: all 0.15s ease;
@@ -146,12 +189,21 @@ body {
   width: 100%;
 }
 .option-card:hover {
-  background: rgba(130, 95, 244, 0.03);
-  border-color: rgba(130, 95, 244, 0.3);
+  background: rgb(var(--color-accent-rgb) / 0.03);
+  border-color: rgb(var(--color-accent-rgb) / 0.3);
 }
 .option-card.selected {
-  background: rgba(130, 95, 244, 0.05);
-  border-color: rgba(130, 95, 244, 0.5);
+  background: rgb(var(--color-accent-rgb) / 0.05);
+  border-color: rgb(var(--color-accent-rgb) / 0.5);
+}
+
+/* Fade-in for progressive form fields */
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fade-in 0.3s ease-out both;
 }
 
 /* Accent serif font for brand emphasis */

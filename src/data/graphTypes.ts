@@ -1,6 +1,6 @@
 export type NodeCategory = 'foundational' | 'pathological' | 'clinical' | 'specialty';
 
-export type GraphPhase = 'ambient' | 'diagnostic' | 'repair' | 'solidify';
+export type GraphPhase = 'ambient' | 'diagnostic' | 'learning' | 'solidify';
 
 export interface GraphNode {
   id: string;
@@ -8,13 +8,11 @@ export interface GraphNode {
   category: NodeCategory;
   x: number;
   y: number;
-  isGapSource?: boolean;
-  isGapTarget?: boolean;
+  group?: 'known';
 }
 
 export interface GraphEdge {
   id: string;
   source: string;
   target: string;
-  isBroken?: boolean;
 }

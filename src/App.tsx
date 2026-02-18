@@ -7,6 +7,7 @@ import Hero from './components/Hero';
 import PainPoints from './components/PainPoints';
 import NarrativeSection from './components/NarrativeSection';
 import CtaSection from './components/CtaSection';
+import FaqSection from './components/FaqSection';
 import Footer from './components/Footer';
 import LeadForm from './components/LeadForm';
 
@@ -17,12 +18,13 @@ export default function App() {
   const [formOpen, setFormOpen] = useState(false);
 
   return (
-    <div className="bg-bg text-primary min-h-screen">
+    <div className="min-h-screen">
       <Nav onOpenForm={() => setFormOpen(true)} />
       <Hero onOpenForm={() => setFormOpen(true)} />
       <PainPoints />
       <NarrativeSection />
       <CtaSection onOpenForm={() => setFormOpen(true)} />
+      <FaqSection />
       <Footer />
       <LeadForm isOpen={formOpen} onClose={() => setFormOpen(false)} />
     </div>

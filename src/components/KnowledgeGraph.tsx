@@ -18,7 +18,7 @@
 import { useEffect, useRef } from 'react';
 import GraphCanvas from './GraphCanvas';
 import { GRAPH_NODES, GRAPH_EDGES } from '../data/graphData';
-import { toAmbient, toDiagnostic, toRepair, toSolidify } from '../animations/graphAnimations';
+import { toAmbient, toDiagnostic, toLearning, toSolidify } from '../animations/graphAnimations';
 import type { GraphPhase } from '../data/graphTypes';
 import {
   forceSimulation,
@@ -153,7 +153,7 @@ export default function KnowledgeGraph({ phase }: Props) {
 
     switch (phase) {
       case 'diagnostic': timelineRef.current = toDiagnostic(); break;
-      case 'repair':     timelineRef.current = toRepair();     break;
+      case 'learning':   timelineRef.current = toLearning();   break;
       case 'solidify':   timelineRef.current = toSolidify();   break;
       default:           timelineRef.current = toAmbient();    break;
     }

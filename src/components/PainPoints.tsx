@@ -53,9 +53,9 @@ export default function PainPoints() {
         {PAIN_POINTS.map((point, i) => (
           <div
             key={i}
-            className="pain-item flex items-start gap-4 p-6 rounded-xl border border-primary/[0.06] bg-white/50"
+            className="pain-item flex items-center gap-4 p-6 rounded-xl border border-primary/[0.06] bg-surface/50"
           >
-            <span className="flex-shrink-0 mt-1 w-2 h-2 rounded-full bg-danger" />
+            <span className="flex-shrink-0 w-2 h-2 rounded-full bg-danger" />
             <p className="text-lg lg:text-xl font-medium text-primary leading-snug">
               {point}
             </p>

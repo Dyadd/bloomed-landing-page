@@ -9,7 +9,7 @@ export default function CtaSection({ onOpenForm }: Props) {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
           className="w-[700px] h-[450px] opacity-[0.06]"
-          style={{ background: 'radial-gradient(ellipse, #825ff4, transparent 68%)' }}
+          style={{ background: 'radial-gradient(ellipse, var(--color-accent), transparent 68%)' }}
         />
       </div>
 

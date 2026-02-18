@@ -41,14 +41,6 @@ function GraphCanvas({ nodes, edges }: Props) {
             <feMergeNode in="SourceGraphic" />
           </feMerge>
         </filter>
-        {/* Stronger glow for the repair particle */}
-        <filter id="glow-particle" x="-150%" y="-150%" width="400%" height="400%">
-          <feGaussianBlur stdDeviation="6" result="blur" />
-          <feMerge>
-            <feMergeNode in="blur" />
-            <feMergeNode in="SourceGraphic" />
-          </feMerge>
-        </filter>
       </defs>
 
       {/* -- EDGES -- */}
@@ -65,24 +57,13 @@ function GraphCanvas({ nodes, edges }: Props) {
               y1={src.y}
               x2={tgt.x}
               y2={tgt.y}
-              stroke="rgba(44, 42, 38, 0.15)"
+              stroke="var(--color-edge)"
               strokeWidth={1.5}
               strokeLinecap="round"
             />
           );
         })}
       </g>
-
-      {/* -- REPAIR PARTICLE -- hidden initially; GSAP moves it along the repaired edge */}
-      <circle
-        id="repair-particle"
-        cx={380}
-        cy={220}
-        r={5}
-        fill="#825ff4"
-        opacity={0}
-        filter="url(#glow-particle)"
-      />
 
       {/* -- NODES -- */}
       <g>
@@ -119,7 +100,7 @@ function GraphCanvas({ nodes, edges }: Props) {
                   y={-(NODE_RADIUS + 10 + (labelLines.length - 1 - i) * 13)}
                   textAnchor="middle"
                   fontSize="9.5"
-                  fill="rgba(44, 42, 38, 0.55)"
+                  fill="var(--color-label)"
                   fontFamily="Inter, system-ui, sans-serif"
                   fontWeight="500"
                   letterSpacing="0.03em"

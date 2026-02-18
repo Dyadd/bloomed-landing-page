@@ -4,7 +4,7 @@
  * The main scroll-driven section of the page.
  *
  * Layout:
- *   LEFT  — three scrollable text steps (Diagnostic, Repair, Solidify)
+ *   LEFT  — three scrollable text steps (Diagnostic, Learning, Solidify)
  *   RIGHT — the KnowledgeGraph SVG, sticky (stays in view as text scrolls)
  *
  * How it works:
@@ -35,25 +35,25 @@ const PHASES: {
     phase: 'diagnostic',
     number: '01',
     label: 'Diagnostic',
-    headline: 'Not all gaps are obvious.',
-    body: "You know anatomy. You know pathology. But somewhere between basic sciences and clinical reasoning, connections break down. Bloomed maps your entire medical knowledge network and surfaces the exact link that's missing.",
-    callout: "The gap between Pathology and Clinical Reasoning affects the majority of medical students — and most never know it's there.",
+    headline: 'Before you study, Bloomed gets to know you.',
+    body: "Your practice questions and course materials - lecture slides, readings, unit guides - are processed to build a complete picture of your knowledge across every subject, mapping exactly where to focus next.",
+    callout: 'Most students spend hours studying the wrong things. Bloomed makes sure you never do.',
   },
   {
-    phase: 'repair',
+    phase: 'learning',
     number: '02',
-    label: 'Targeted Repair',
-    headline: 'Study less. Learn exactly what matters.',
-    body: "Instead of reviewing everything, Bloomed rebuilds the specific pathway that's broken. Case-based scenarios, spaced repetition, and targeted exercises that restore the missing connection — fast.",
-    callout: 'Focused repair sessions, not passive review.',
+    label: 'Targeted Learning Plan',
+    headline: 'Study smarter, not harder.',
+    body: "Instead of working through a textbook and hoping it's relevant, Bloomed structures your study around what you actually need - mock questions, curated notes, and purpose-built flashcards delivered in the right order, at the right time.",
+    callout: 'Smarter study, not more study.',
   },
   {
     phase: 'solidify',
     number: '03',
     label: 'Solidification',
-    headline: 'Retained. Applied. Unshakeable.',
-    body: "Once a gap is repaired, Bloomed ensures it stays that way. Longitudinal reinforcement, clinical case patterns, and real-world application cement your understanding — permanently.",
-    callout: 'Knowledge that holds under pressure — on the wards, in OSCEs, and in the AMC.',
+    headline: 'Knowledge that compounds over time.',
+    body: "As you learn, Bloomed keeps reinforcing it. Intelligently scheduled questions and spaced repetition flashcards ensure your knowledge compounds over time - not just memorised. Actually understood. Ready for the wards and exams.",
+    callout: 'Knowledge that holds under pressure - on the wards, in OSCEs, and in your exams.',
   },
 ];
 
@@ -110,8 +110,7 @@ export default function NarrativeSection() {
           How <span className="font-accent gradient-text">Bloomed</span> Works.
         </h2>
         <p className="text-lg text-muted leading-relaxed max-w-xl mx-auto">
-          Uni teaching is 1 size fits all. Bloomed is a personalised tool that adapts to your
-          unique cognitive map, identifying gaps before they become exam failures.
+          Uni teaching is one-size-fits-all. Bloomed builds a personalised learning engine around you - mapping what you know, structuring what you need to learn, and making sure it sticks.
         </p>
       </div>
 
@@ -125,12 +124,11 @@ export default function NarrativeSection() {
               ref={el => { stepRefs.current[i] = el; }}
               className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
             >
-              {/* Large faded background number */}
-              <span className="absolute top-20 left-8 lg:left-16 text-[8rem] lg:text-[10rem] font-bold leading-none text-primary/[0.04] select-none pointer-events-none">
-                {p.number}
-              </span>
-
               <div className="step-content relative max-w-lg">
+                {/* Large faded background number */}
+                <span className="absolute -top-28 lg:-top-32 left-0 text-[8rem] lg:text-[10rem] font-bold leading-none text-primary/[0.04] select-none pointer-events-none">
+                  {p.number}
+                </span>
                 {/* Headline */}
                 <h3 className="text-3xl lg:text-4xl font-bold mb-5 leading-tight text-primary">
                   The {p.label}
@@ -167,12 +165,12 @@ export default function NarrativeSection() {
               style={{
                 background:
                   phase === 'diagnostic'
-                    ? 'radial-gradient(circle, #e5484d, transparent 70%)'
-                    : phase === 'repair'
-                    ? 'radial-gradient(circle, #825ff4, transparent 70%)'
+                    ? 'radial-gradient(circle, var(--color-accent), transparent 70%)'
+                    : phase === 'learning'
+                    ? 'radial-gradient(circle, #f97316, transparent 70%)'
                     : phase === 'solidify'
                     ? 'radial-gradient(circle, #30a46c, transparent 70%)'
-                    : 'radial-gradient(circle, #825ff4, transparent 70%)',
+                    : 'radial-gradient(circle, var(--color-accent), transparent 70%)',
               }}
             />
           </div>

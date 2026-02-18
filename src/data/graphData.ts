@@ -1,29 +1,29 @@
 import type { GraphNode, GraphEdge } from './graphTypes';
 
-// SVG viewport: 740 × 500
-// Positions are pre-computed for a natural clustered layout —
+// SVG viewport: 740 x 500
+// Positions are pre-computed for a natural clustered layout -
 // no force simulation needed, which keeps things predictable for animation.
 
 export const GRAPH_NODES: GraphNode[] = [
-  // Foundational Sciences — bottom-left cluster
-  { id: 'anatomy',      label: 'Anatomy',      category: 'foundational', x: 110, y: 400 },
+  // Foundational Sciences - bottom-left cluster
+  { id: 'anatomy',      label: 'Anatomy',      category: 'foundational', x: 110, y: 400, group: 'known' },
   { id: 'histology',    label: 'Histology',    category: 'foundational', x: 90,  y: 285 },
-  { id: 'physiology',   label: 'Physiology',   category: 'foundational', x: 200, y: 290 },
+  { id: 'physiology',   label: 'Physiology',   category: 'foundational', x: 200, y: 290, group: 'known' },
   { id: 'biochemistry', label: 'Biochemistry', category: 'foundational', x: 285, y: 385 },
 
-  // Pathological Sciences — center cluster
-  { id: 'pathology',    label: 'Pathology',    category: 'pathological', x: 380, y: 220, isGapSource: true },
-  { id: 'pharmacology', label: 'Pharmacology', category: 'pathological', x: 420, y: 370 },
+  // Pathological Sciences - center cluster
+  { id: 'pathology',    label: 'Pathology',    category: 'pathological', x: 380, y: 220 },
+  { id: 'pharmacology', label: 'Pharmacology', category: 'pathological', x: 420, y: 370, group: 'known' },
   { id: 'microbiology', label: 'Microbiology', category: 'pathological', x: 300, y: 450 },
-  { id: 'immunology',   label: 'Immunology',   category: 'pathological', x: 490, y: 445 },
+  { id: 'immunology',   label: 'Immunology',   category: 'pathological', x: 490, y: 445, group: 'known' },
 
-  // Clinical Sciences — center-right cluster
+  // Clinical Sciences - center-right cluster
   // Note: label uses \n for two-line rendering in the SVG
-  { id: 'clinicalReasoning',  label: 'Clinical\nReasoning',  category: 'clinical', x: 540, y: 185, isGapTarget: true },
-  { id: 'diagnosis',          label: 'Diagnosis',            category: 'clinical', x: 590, y: 310 },
+  { id: 'clinicalReasoning',  label: 'Clinical\nReasoning',  category: 'clinical', x: 540, y: 185 },
+  { id: 'diagnosis',          label: 'Diagnosis',            category: 'clinical', x: 590, y: 310, group: 'known' },
   { id: 'treatmentPlanning',  label: 'Tx. Planning',         category: 'clinical', x: 555, y: 430 },
 
-  // Specialties — right cluster
+  // Specialties - right cluster
   { id: 'internalMedicine', label: 'Internal Med.', category: 'specialty', x: 660, y: 180 },
   { id: 'surgery',          label: 'Surgery',        category: 'specialty', x: 670, y: 315 },
 ];
@@ -41,8 +41,8 @@ export const GRAPH_EDGES: GraphEdge[] = [
   { id: 'microbiology-immunology',      source: 'microbiology', target: 'immunology' },
   { id: 'pharmacology-treatmentPlanning', source: 'pharmacology', target: 'treatmentPlanning' },
 
-  // ── THE BROKEN EDGE ── the gap Bloomed diagnoses and fixes
-  { id: 'pathology-clinicalReasoning', source: 'pathology', target: 'clinicalReasoning', isBroken: true },
+  // Cross-cluster connections
+  { id: 'pathology-clinicalReasoning', source: 'pathology', target: 'clinicalReasoning' },
 
   // Clinical connections
   { id: 'clinicalReasoning-diagnosis',        source: 'clinicalReasoning', target: 'diagnosis' },
@@ -51,14 +51,23 @@ export const GRAPH_EDGES: GraphEdge[] = [
   { id: 'diagnosis-surgery',                  source: 'diagnosis',         target: 'surgery' },
 ];
 
-// Convenience constants used by the animation module
-export const GAP_SOURCE_ID = 'pathology';
-export const GAP_TARGET_ID = 'clinicalReasoning';
-export const BROKEN_EDGE_ID = 'pathology-clinicalReasoning';
+// Disparate known nodes - scattered across the graph to show fragmented knowledge
+export const KNOWN_NODE_IDS = new Set([
+  'anatomy',       // bottom-left
+  'physiology',    // left
+  'pharmacology',  // center
+  'diagnosis',     // right
+  'immunology',    // bottom-right
+]);
 
-// Pre-computed length of the broken edge for stroke-dashoffset animation
-const src = GRAPH_NODES.find(n => n.id === GAP_SOURCE_ID)!;
-const tgt = GRAPH_NODES.find(n => n.id === GAP_TARGET_ID)!;
-export const BROKEN_EDGE_LENGTH = Math.round(
-  Math.sqrt(Math.pow(tgt.x - src.x, 2) + Math.pow(tgt.y - src.y, 2))
-);
+/**
+ * Classify an edge based on endpoint groups:
+ *  - "known"    = both endpoints are known (solid in diagnostic)
+ *  - "learning" = at least one endpoint is unknown (dotted in learning phase)
+ */
+export function classifyEdge(edge: GraphEdge): 'known' | 'learning' {
+  const srcKnown = KNOWN_NODE_IDS.has(edge.source);
+  const tgtKnown = KNOWN_NODE_IDS.has(edge.target);
+  if (srcKnown && tgtKnown) return 'known';
+  return 'learning';
+}
