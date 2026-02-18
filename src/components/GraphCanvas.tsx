@@ -10,10 +10,10 @@ import { memo } from 'react';
 import type { GraphNode, GraphEdge } from '../data/graphTypes';
 
 const CATEGORY_COLORS: Record<string, string> = {
-  foundational: '#818cf8', // indigo-400
-  pathological: '#a78bfa', // violet-400
-  clinical:     '#60a5fa', // blue-400
-  specialty:    '#22d3ee', // cyan-400
+  foundational: '#6366f1',
+  pathological: '#8b5cf6',
+  clinical:     '#3b82f6',
+  specialty:    '#06b6d4',
 };
 
 const NODE_RADIUS = 7;
@@ -51,7 +51,7 @@ function GraphCanvas({ nodes, edges }: Props) {
         </filter>
       </defs>
 
-      {/* ── EDGES ── */}
+      {/* -- EDGES -- */}
       <g>
         {edges.map(edge => {
           const src = nodeMap[edge.source];
@@ -65,7 +65,7 @@ function GraphCanvas({ nodes, edges }: Props) {
               y1={src.y}
               x2={tgt.x}
               y2={tgt.y}
-              stroke="rgba(148, 163, 184, 0.25)"
+              stroke="rgba(44, 42, 38, 0.15)"
               strokeWidth={1.5}
               strokeLinecap="round"
             />
@@ -73,22 +73,21 @@ function GraphCanvas({ nodes, edges }: Props) {
         })}
       </g>
 
-      {/* ── REPAIR PARTICLE ── hidden initially; GSAP moves it along the repaired edge */}
+      {/* -- REPAIR PARTICLE -- hidden initially; GSAP moves it along the repaired edge */}
       <circle
         id="repair-particle"
         cx={380}
         cy={220}
         r={5}
-        fill="#06b6d4"
+        fill="#825ff4"
         opacity={0}
         filter="url(#glow-particle)"
       />
 
-      {/* ── NODES ── */}
+      {/* -- NODES -- */}
       <g>
         {nodes.map(node => {
           const color = CATEGORY_COLORS[node.category];
-          // Support two-line labels (e.g. "Clinical\nReasoning")
           const labelLines = node.label.split('\n');
 
           return (
@@ -120,7 +119,7 @@ function GraphCanvas({ nodes, edges }: Props) {
                   y={-(NODE_RADIUS + 10 + (labelLines.length - 1 - i) * 13)}
                   textAnchor="middle"
                   fontSize="9.5"
-                  fill="rgba(240, 244, 255, 0.6)"
+                  fill="rgba(44, 42, 38, 0.55)"
                   fontFamily="Inter, system-ui, sans-serif"
                   fontWeight="500"
                   letterSpacing="0.03em"

@@ -56,7 +56,6 @@ const LEVELS = [
   { value: 'Junior doctor', label: 'Junior doctor', desc: 'Intern or RMO' },
 ];
 
-// Total number of steps (not counting the email step, which is the final one)
 const TOTAL_STEPS = 4;
 
 interface Props {
@@ -129,33 +128,33 @@ export default function LeadForm({ isOpen, onClose }: Props) {
       className="fixed inset-0 z-50 flex items-center justify-center p-4"
       onClick={e => { if (e.target === e.currentTarget) handleClose(); }}
     >
-      <div className="absolute inset-0 bg-black/65 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-black/30 backdrop-blur-sm" />
 
       {/* Modal */}
-      <div className="relative w-full max-w-[500px] bg-[#0c1120] border border-blue-500/20 rounded-2xl shadow-2xl overflow-hidden">
+      <div className="relative w-full max-w-[500px] bg-white border border-primary/10 rounded-2xl shadow-2xl overflow-hidden">
 
         {/* Header */}
-        <div className="flex items-start justify-between px-6 pt-6 pb-5 border-b border-white/5">
+        <div className="flex items-start justify-between px-6 pt-6 pb-5 border-b border-primary/5">
           <div>
             <p className="text-[10px] font-semibold tracking-widest text-muted uppercase mb-1">
               Early access
             </p>
-            <h3 className="text-lg font-bold text-white">Join the Bloomed waitlist</h3>
+            <h3 className="text-lg font-bold text-primary">Get early access to Bloomed</h3>
           </div>
           <button
             onClick={handleClose}
             aria-label="Close"
-            className="w-8 h-8 flex items-center justify-center rounded-lg text-muted hover:text-white hover:bg-white/8 transition-colors mt-0.5"
+            className="w-8 h-8 flex items-center justify-center rounded-lg text-muted hover:text-primary hover:bg-primary/5 transition-colors mt-0.5"
           >
-            ✕
+            &#10005;
           </button>
         </div>
 
         {/* Progress bar */}
         {!submitted && (
-          <div className="h-[2px] bg-white/5">
+          <div className="h-[2px] bg-primary/5">
             <div
-              className="h-full bg-gradient-to-r from-primary to-accent transition-all duration-500"
+              className="h-full bg-gradient-to-r from-accent to-[#a78bfa] transition-all duration-500"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -164,13 +163,13 @@ export default function LeadForm({ isOpen, onClose }: Props) {
         {/* Body */}
         <div className="px-6 py-6">
 
-          {/* ── SUCCESS ── */}
+          {/* -- SUCCESS -- */}
           {submitted ? (
             <div className="py-8 text-center">
               <div className="w-14 h-14 rounded-full bg-success/10 border border-success/25 flex items-center justify-center mx-auto mb-5">
-                <span className="text-success text-2xl">✓</span>
+                <span className="text-success text-2xl">&#10003;</span>
               </div>
-              <h4 className="text-xl font-bold text-white mb-2">You're on the list.</h4>
+              <h4 className="text-xl font-bold text-primary mb-2">You're on the list.</h4>
               <p className="text-sm text-muted leading-relaxed max-w-xs mx-auto">
                 We'll reach out when Bloomed launches for Australian medical students.
                 Keep studying — we're building something that'll make it a lot easier.
@@ -180,7 +179,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               </button>
             </div>
 
-          /* ── STEP 1: Name ── */
+          /* -- STEP 1: Name -- */
           ) : step === 0 ? (
             <div>
               <StepHeader current={1} total={TOTAL_STEPS} question="What's your name?" />
@@ -199,16 +198,15 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               />
             </div>
 
-          /* ── STEP 2: University + Level ── */
+          /* -- STEP 2: University + Level -- */
           ) : step === 1 ? (
             <div>
               <StepHeader current={2} total={TOTAL_STEPS} question="Tell us about your studies." />
 
-              {/* University select */}
               <label className="block text-xs font-medium text-muted mb-1.5">University</label>
               <select
                 className="form-input mb-4 cursor-pointer"
-                style={{ appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%236b7ba8\' stroke-width=\'2\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center' }}
+                style={{ appearance: 'none', backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2378756e\' stroke-width=\'2\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 14px center' }}
                 {...register('lister_university', { required: 'Please select your university' })}
               >
                 <option value="">Select your university...</option>
@@ -218,7 +216,6 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               </select>
               {errors.lister_university && <FieldError msg={errors.lister_university.message!} />}
 
-              {/* Level radio */}
               <label className="block text-xs font-medium text-muted mb-1.5 mt-4">Where are you in your degree?</label>
               <div className="space-y-2">
                 {LEVELS.map(lvl => {
@@ -230,9 +227,9 @@ export default function LeadForm({ isOpen, onClose }: Props) {
                       onClick={() => setValue('lister_level', lvl.value)}
                       className={`option-card ${selected ? 'selected' : ''}`}
                     >
-                      <span className={`mt-0.5 w-4 h-4 rounded-full border-2 flex-shrink-0 transition-all ${selected ? 'border-primary bg-primary' : 'border-white/20'}`} />
+                      <span className={`mt-0.5 w-4 h-4 rounded-full border-2 flex-shrink-0 transition-all ${selected ? 'border-accent bg-accent' : 'border-primary/20'}`} />
                       <span>
-                        <span className="block text-sm font-medium text-white">{lvl.label}</span>
+                        <span className="block text-sm font-medium text-primary">{lvl.label}</span>
                         <span className="block text-xs text-muted mt-0.5">{lvl.desc}</span>
                       </span>
                     </button>
@@ -248,7 +245,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               />
             </div>
 
-          /* ── STEP 3: Why + Beta ── */
+          /* -- STEP 3: Why + Beta -- */
           ) : step === 2 ? (
             <div>
               <StepHeader current={3} total={TOTAL_STEPS} question="What are you hoping Bloomed will help you with?" />
@@ -261,7 +258,6 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               />
               {errors.lister_why && <FieldError msg={errors.lister_why.message!} />}
 
-              {/* Beta checkbox */}
               <label className="flex items-start gap-3 mt-5 cursor-pointer group">
                 <div className="relative mt-0.5 flex-shrink-0">
                   <input
@@ -273,8 +269,8 @@ export default function LeadForm({ isOpen, onClose }: Props) {
                     onClick={() => setValue('lister_beta', !watched.lister_beta)}
                     className={`w-5 h-5 rounded border-2 flex items-center justify-center transition-all cursor-pointer ${
                       watched.lister_beta
-                        ? 'border-primary bg-primary'
-                        : 'border-white/20 group-hover:border-white/40'
+                        ? 'border-accent bg-accent'
+                        : 'border-primary/20 group-hover:border-primary/40'
                     }`}
                   >
                     {watched.lister_beta && (
@@ -285,7 +281,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
                   </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-white">I'd like to be a beta tester</p>
+                  <p className="text-sm font-medium text-primary">I'd like to be a beta tester</p>
                   <p className="text-xs text-muted mt-0.5">You'll get early access and we'll ask for feedback as we build.</p>
                 </div>
               </label>
@@ -297,7 +293,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               />
             </div>
 
-          /* ── STEP 4: Email + Submit ── */
+          /* -- STEP 4: Email + Submit -- */
           ) : (
             <form onSubmit={handleSubmit(onSubmit)}>
               <StepHeader current={4} total={TOTAL_STEPS} question="Last one — where should we reach you?" />
@@ -327,10 +323,10 @@ export default function LeadForm({ isOpen, onClose }: Props) {
 
               <div className="flex items-center justify-between">
                 <button type="button" onClick={back} className="btn-ghost text-sm">
-                  ← Back
+                  &larr; Back
                 </button>
                 <button type="submit" disabled={isSubmitting} className="btn-primary">
-                  {isSubmitting ? 'Joining...' : 'Join the waitlist →'}
+                  {isSubmitting ? 'Joining...' : 'Get early access →'}
                 </button>
               </div>
             </form>
@@ -342,7 +338,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
   );
 }
 
-// ── Small helper components ────────────────────────────────────────────────────
+// -- Small helper components --
 
 function StepHeader({ current, total, question }: { current: number; total: number; question: string }) {
   return (
@@ -350,7 +346,7 @@ function StepHeader({ current, total, question }: { current: number; total: numb
       <p className="text-[11px] text-muted font-medium mb-3">
         Step {current} of {total}
       </p>
-      <h4 className="text-[15px] font-semibold text-white mb-5">{question}</h4>
+      <h4 className="text-[15px] font-semibold text-primary mb-5">{question}</h4>
     </>
   );
 }
@@ -373,7 +369,7 @@ function StepNav({
   return (
     <div className="flex items-center justify-between mt-6">
       {showBack && onBack ? (
-        <button type="button" onClick={onBack} className="btn-ghost text-sm">← Back</button>
+        <button type="button" onClick={onBack} className="btn-ghost text-sm">&larr; Back</button>
       ) : <div />}
       <button
         type="button"
@@ -381,7 +377,7 @@ function StepNav({
         disabled={!canContinue}
         className="btn-primary disabled:opacity-40 disabled:cursor-not-allowed"
       >
-        Continue →
+        Continue &rarr;
       </button>
     </div>
   );

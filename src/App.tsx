@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 
 import Nav from './components/Nav';
 import Hero from './components/Hero';
+import PainPoints from './components/PainPoints';
 import NarrativeSection from './components/NarrativeSection';
 import CtaSection from './components/CtaSection';
 import Footer from './components/Footer';
@@ -16,9 +17,10 @@ export default function App() {
   const [formOpen, setFormOpen] = useState(false);
 
   return (
-    <div className="bg-bg text-white min-h-screen">
+    <div className="bg-bg text-primary min-h-screen">
       <Nav onOpenForm={() => setFormOpen(true)} />
       <Hero onOpenForm={() => setFormOpen(true)} />
+      <PainPoints />
       <NarrativeSection />
       <CtaSection onOpenForm={() => setFormOpen(true)} />
       <Footer />

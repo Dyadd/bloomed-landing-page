@@ -59,7 +59,6 @@ const PHASES: {
 
 export default function NarrativeSection() {
   const [phase, setPhase] = useState<GraphPhase>('ambient');
-  // One ref per step div
   const stepRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
@@ -68,7 +67,6 @@ export default function NarrativeSection() {
     stepRefs.current.forEach((step, i) => {
       if (!step) return;
 
-      // Phase-switching trigger: fires when step enters / leaves the centre
       const trigger = ScrollTrigger.create({
         trigger: step,
         start: 'top 58%',
@@ -79,7 +77,6 @@ export default function NarrativeSection() {
       });
       triggers.push(trigger);
 
-      // Content fade-in when the step scrolls into view
       const content = step.querySelector('.step-content');
       if (content) {
         gsap.fromTo(
@@ -107,6 +104,17 @@ export default function NarrativeSection() {
 
   return (
     <section className="relative">
+      {/* Section header — centered, large, with accent serif on brand name */}
+      <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-20 pb-4 text-center">
+        <h2 className="text-4xl lg:text-[3.5rem] font-bold text-primary leading-tight tracking-tight mb-5">
+          How <span className="font-accent gradient-text">Bloomed</span> Works.
+        </h2>
+        <p className="text-lg text-muted leading-relaxed max-w-xl mx-auto">
+          Uni teaching is 1 size fits all. Bloomed is a personalised tool that adapts to your
+          unique cognitive map, identifying gaps before they become exam failures.
+        </p>
+      </div>
+
       <div className="narrative-container max-w-[1400px] mx-auto">
 
         {/* LEFT — scrollable text steps */}
@@ -115,37 +123,36 @@ export default function NarrativeSection() {
             <div
               key={p.phase}
               ref={el => { stepRefs.current[i] = el; }}
-              className="min-h-screen flex items-center px-8 lg:px-16 py-24"
+              className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
             >
-              <div className="step-content max-w-lg">
-                {/* Step label */}
-                <div className="flex items-center gap-3 mb-8">
-                  <span className="text-xs font-semibold tracking-widest text-muted/60 uppercase">
-                    {p.number}
-                  </span>
-                  <span className="text-muted/40 text-xs">/</span>
-                  <span className="phase-label">
-                    <span className="dot" />
-                    {p.label}
-                  </span>
-                </div>
+              {/* Large faded background number */}
+              <span className="absolute top-20 left-8 lg:left-16 text-[8rem] lg:text-[10rem] font-bold leading-none text-primary/[0.04] select-none pointer-events-none">
+                {p.number}
+              </span>
 
+              <div className="step-content relative max-w-lg">
                 {/* Headline */}
-                <h2 className="text-4xl lg:text-5xl font-bold mb-6 leading-tight text-[#f0f4ff]">
-                  {p.headline}
-                </h2>
+                <h3 className="text-3xl lg:text-4xl font-bold mb-5 leading-tight text-primary">
+                  The {p.label}
+                </h3>
 
                 {/* Body */}
-                <p className="text-lg text-muted leading-relaxed mb-8">
+                <p className="text-lg text-muted leading-relaxed mb-6">
                   {p.body}
                 </p>
 
                 {/* Callout */}
-                <div className="border-l-2 border-accent/30 pl-5 py-1">
+                <div className="border-l-2 border-accent/30 pl-5 py-1 mb-8">
                   <p className="text-sm text-accent/70 italic leading-relaxed">
                     {p.callout}
                   </p>
                 </div>
+
+                {/* Phase label pill at bottom */}
+                <span className="phase-label">
+                  <span className="dot" />
+                  {p.label}
+                </span>
               </div>
             </div>
           ))}
@@ -156,16 +163,16 @@ export default function NarrativeSection() {
           {/* Colour-shifting ambient glow behind the graph */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
             <div
-              className="w-[420px] h-[420px] rounded-full transition-all duration-[1200ms] opacity-15"
+              className="w-[420px] h-[420px] rounded-full transition-all duration-[1200ms] opacity-10"
               style={{
                 background:
                   phase === 'diagnostic'
-                    ? 'radial-gradient(circle, #f43f5e, transparent 70%)'
+                    ? 'radial-gradient(circle, #e5484d, transparent 70%)'
                     : phase === 'repair'
-                    ? 'radial-gradient(circle, #06b6d4, transparent 70%)'
+                    ? 'radial-gradient(circle, #825ff4, transparent 70%)'
                     : phase === 'solidify'
-                    ? 'radial-gradient(circle, #10b981, transparent 70%)'
-                    : 'radial-gradient(circle, #3b82f6, transparent 70%)',
+                    ? 'radial-gradient(circle, #30a46c, transparent 70%)'
+                    : 'radial-gradient(circle, #825ff4, transparent 70%)',
               }}
             />
           </div>

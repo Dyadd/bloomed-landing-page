@@ -4,13 +4,13 @@ export default {
   theme: {
     extend: {
       colors: {
-        bg: '#05080f',
-        surface: '#0a0f20',
-        primary: '#3b82f6',
-        accent: '#06b6d4',
-        danger: '#f43f5e',
-        success: '#10b981',
-        muted: '#6b7ba8',
+        bg: '#f5f2eb',
+        surface: '#ffffff',
+        primary: '#2c2a26',
+        accent: '#825ff4',
+        danger: '#e5484d',
+        success: '#30a46c',
+        muted: '#78756e',
       },
     },
   },
