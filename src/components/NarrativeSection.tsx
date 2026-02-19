@@ -36,7 +36,7 @@ const PHASES: {
     number: '01',
     label: 'Diagnostic',
     headline: 'Before you study, Bloomed gets to know you.',
-    body: "Your practice questions and course materials - lecture slides, readings, unit guides - are processed to build a complete picture of your knowledge across every subject, mapping exactly where to focus next.",
+    body: "Our practice questions and your course materials - lecture slides, readings, unit guides - are processed to build a complete picture of your knowledge across every subject, mapping exactly where to focus next.",
     callout: 'Most students spend hours studying the wrong things. Bloomed makes sure you never do.',
   },
   {
