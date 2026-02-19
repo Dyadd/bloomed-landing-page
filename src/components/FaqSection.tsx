@@ -19,7 +19,7 @@ const FAQS = [
   },
   {
     q: 'Is it free?',
-    a: "Pricing hasn't been announced yet - early access sign-ups will be the first to know.",
+    a: "Pricing hasn't been announced yet - early access sign-ups might get free access 😉.",
   },
 ];
 

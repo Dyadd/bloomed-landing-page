@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 32" fill="none">
+  <rect width="28" height="28" rx="6" fill="#2B5FC4"/>
+  <text x="14" y="20" text-anchor="middle" fill="white" font-family="system-ui, sans-serif" font-weight="700" font-size="14">B</text>
+  <text x="38" y="21" fill="#2B5FC4" font-family="Georgia, serif" font-style="italic" font-weight="700" font-size="18" letter-spacing="-0.02em">Bloomed</text>
+</svg>

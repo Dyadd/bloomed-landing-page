@@ -283,11 +283,6 @@ export default function LeadForm({ isOpen, onClose }: Props) {
             </div>
           )}
 
-          {!submitted && (
-            <p className="text-[10px] text-muted/40 mt-4">
-              No spam. Unsubscribe anytime.
-            </p>
-          )}
         </div>
       </div>
     </div>

@@ -105,13 +105,107 @@ export default function KnowledgeGraph({ phase }: Props) {
       });
     });
 
-    // ── Drag behaviour ────────────────────────────────────────────────────────
+    // ── Cursor attraction force ─────────────────────────────────────────────
+    // Nodes gently drift toward the mouse when it's over the graph area,
+    // signalling the graph is interactive before the user even hovers a node.
+    let cursorX = 0;
+    let cursorY = 0;
+    let cursorActive = false;
+    const ATTRACT_STRENGTH = 0.15;
+    const ATTRACT_RADIUS   = 200;   // only affects nodes within this distance
+
+    function cursorForce(alpha: number) {
+      if (!cursorActive) return;
+      simNodes.forEach(node => {
+        // Skip nodes being dragged (they have fx/fy set)
+        if (node.fx != null) return;
+        const dx = cursorX - node.x!;
+        const dy = cursorY - node.y!;
+        const dist = Math.hypot(dx, dy);
+        if (dist < 1 || dist > ATTRACT_RADIUS) return;
+        // Strength falls off with distance
+        const strength = ATTRACT_STRENGTH * alpha * (1 - dist / ATTRACT_RADIUS);
+        node.vx! += dx * strength;
+        node.vy! += dy * strength;
+      });
+    }
+    sim.force('cursor', cursorForce);
+
+    const onMouseMove = (e: MouseEvent) => {
+      if (!svgEl) return;
+      const [sx, sy] = clientToSVG(svgEl, e);
+      cursorX = sx;
+      cursorY = sy;
+      if (!cursorActive) {
+        cursorActive = true;
+      }
+      // Keep the simulation warm so it responds
+      if (sim.alpha() < 0.05) sim.alpha(0.05).restart();
+    };
+
+    const onMouseLeave = () => {
+      cursorActive = false;
+    };
+
+    svgEl?.addEventListener('mousemove', onMouseMove);
+    svgEl?.addEventListener('mouseleave', onMouseLeave);
+
+    // ── Drag behaviour + hover effects ──────────────────────────────────────
     if (svgEl) {
       simNodes.forEach(simNode => {
         const groupEl = document.getElementById(`node-${simNode.id}`) as SVGGElement | null;
         if (!groupEl) return;
 
         groupEl.style.cursor = 'grab';
+
+        // Hover: scale bump on dot + ring expansion/brightening
+        let hoverTween: gsap.core.Timeline | null = null;
+        const dotEl  = `#node-${simNode.id}-dot`;
+        const ringEl = `#node-${simNode.id}-ring`;
+
+        groupEl.addEventListener('mouseenter', () => {
+          hoverTween?.kill();
+          const currentR = parseFloat(
+            document.querySelector(dotEl)?.getAttribute('r') ?? '7'
+          );
+          const currentRingR = parseFloat(
+            document.querySelector(ringEl)?.getAttribute('r') ?? '13'
+          );
+          hoverTween = gsap.timeline()
+            .to(dotEl, {
+              attr: { r: currentR + 3 },
+              duration: 0.2,
+              ease: 'back.out(2)',
+            }, 0)
+            .to(ringEl, {
+              attr: { r: currentRingR + 6 },
+              opacity: 0.5,
+              duration: 0.25,
+              ease: 'power2.out',
+            }, 0);
+        });
+
+        groupEl.addEventListener('mouseleave', () => {
+          hoverTween?.kill();
+          const currentR = parseFloat(
+            document.querySelector(dotEl)?.getAttribute('r') ?? '10'
+          );
+          const currentRingR = parseFloat(
+            document.querySelector(ringEl)?.getAttribute('r') ?? '19'
+          );
+          hoverTween = gsap.timeline()
+            .to(dotEl, {
+              attr: { r: Math.max(currentR - 3, 7) },
+              duration: 0.3,
+              ease: 'power2.inOut',
+            }, 0)
+            .to(ringEl, {
+              attr: { r: Math.max(currentRingR - 6, 13) },
+              opacity: 0.15,
+              duration: 0.35,
+              ease: 'power2.inOut',
+            }, 0);
+        });
 
         const dragBehavior = drag<SVGGElement, unknown>()
           .on('start', (event) => {
@@ -141,6 +235,8 @@ export default function KnowledgeGraph({ phase }: Props) {
 
     return () => {
       sim.stop();
+      svgEl?.removeEventListener('mousemove', onMouseMove);
+      svgEl?.removeEventListener('mouseleave', onMouseLeave);
       timelineRef.current?.kill();
     };
   }, []);

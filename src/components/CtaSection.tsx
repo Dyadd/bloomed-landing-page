@@ -40,7 +40,6 @@ export default function CtaSection({ onOpenForm }: Props) {
           Get early access
         </button>
 
-        <p className="text-sm text-muted/50 mt-4">No spam. Unsubscribe anytime.</p>
       </div>
     </section>
   );

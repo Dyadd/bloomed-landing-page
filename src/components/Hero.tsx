@@ -40,10 +40,13 @@ export default function Hero({ onOpenForm }: Props) {
           Answer questions. We spot the gaps. You get exactly what you need to fill them.
         </p>
 
-        {/* Sub-heading 2 */}
-        <p className="hero-sub2 text-base text-muted/70 mb-10">
-          Built for Australian medical students and junior doctors.
-        </p>
+        {/* Sub-heading 2 — styled as a pill tag matching the phase-label pattern */}
+        <div className="hero-sub2 flex justify-center mb-10">
+          <span className="phase-label text-[12px]">
+            <span className="dot" />
+            Built for Australian medical students and junior doctors
+          </span>
+        </div>
 
         {/* CTA */}
         <div className="hero-cta flex justify-center">

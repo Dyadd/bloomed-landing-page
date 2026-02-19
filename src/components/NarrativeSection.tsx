@@ -126,7 +126,7 @@ export default function NarrativeSection() {
             >
               <div className="step-content relative max-w-lg">
                 {/* Large faded background number */}
-                <span className="absolute -top-28 lg:-top-32 left-0 text-[8rem] lg:text-[10rem] font-bold leading-none text-primary/[0.04] select-none pointer-events-none">
+                <span className="absolute -top-32 lg:-top-[9.5rem] left-0 text-[8rem] lg:text-[10rem] font-bold leading-none text-primary/[0.04] select-none pointer-events-none">
                   {p.number}
                 </span>
                 {/* Headline */}
@@ -140,17 +140,11 @@ export default function NarrativeSection() {
                 </p>
 
                 {/* Callout */}
-                <div className="border-l-2 border-accent/30 pl-5 py-1 mb-8">
+                <div className="border-l-2 border-accent/30 pl-5 py-1">
                   <p className="text-sm text-accent/70 italic leading-relaxed">
                     {p.callout}
                   </p>
                 </div>
-
-                {/* Phase label pill at bottom */}
-                <span className="phase-label">
-                  <span className="dot" />
-                  {p.label}
-                </span>
               </div>
             </div>
           ))}

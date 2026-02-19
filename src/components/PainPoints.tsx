@@ -5,7 +5,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const PAIN_POINTS = [
-  "You're drowning in cards, not learning from them.",
+  "You're drowning in flashcards, not learning from them.",
   "You study for 5 hours when you need 2.",
   "You memorise facts but you don't understand.",
 ];
