@@ -71,12 +71,6 @@ body {
 ::-webkit-scrollbar-thumb { background: rgb(var(--color-accent-rgb) / 0.3); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: rgb(var(--color-accent-rgb) / 0.5); }
 
-/* Dot grid background pattern */
-.dot-grid {
-  background-image: radial-gradient(var(--color-edge) 1px, transparent 1px);
-  background-size: 32px 32px;
-}
-
 /* Phase label pill */
 .phase-label {
   display: inline-flex;

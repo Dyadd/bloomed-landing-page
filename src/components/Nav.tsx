@@ -29,12 +29,12 @@ export default function Nav({ onOpenForm }: Props) {
         {/* FAQ — hidden on mobile, visible on sm+ */}
         <button
           onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
-          className="btn-ghost text-body-sm hidden sm:inline-flex"
+          className="btn-ghost text-body-sm hidden sm:inline-flex py-[13px]"
         >
           FAQ
         </button>
 
-        <button onClick={onOpenForm} className="btn-ghost text-body-sm">
+        <button onClick={onOpenForm} className="btn-primary text-body-sm" style={{ background: '#1a32e0' }}>
           <span className="hidden sm:inline">Get early access</span>
           <span className="sm:hidden">Join</span>
         </button>
