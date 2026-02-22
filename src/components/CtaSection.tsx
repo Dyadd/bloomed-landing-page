@@ -15,7 +15,7 @@ export default function CtaSection({ onOpenForm }: Props) {
 
       <div className="relative max-w-3xl mx-auto text-center">
         <div className="inline-flex mb-8">
-          <span className="phase-label">
+          <span className="phase-label text-caption">
             <span className="dot" />
             Early access
           </span>

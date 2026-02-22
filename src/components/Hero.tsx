@@ -93,7 +93,7 @@ export default function Hero({ onOpenForm }: Props) {
         </div>
 
         <h1 className="hero-headline text-h1 lg:text-display font-semibold mb-6" style={{ color: '#000000' }}>
-          <span className="font-accent italic">Diagnose</span> Your Weaknesses.
+          <span className="whitespace-nowrap"><span className="font-accent italic">Diagnose</span> Your Weaknesses.</span>
           <br />
           <span className="font-accent italic">Master</span> Medicine.
         </h1>
