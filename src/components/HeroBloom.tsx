@@ -193,10 +193,18 @@ const breathEdgeIds = new Set(
   allEdges.filter((_, i) => srand(i * 59 + 31) < 0.25).map(e => e.id),
 );
 
+const HOVER_RADIUS = 120;
+const HOVER_SCALE = 1.8;
+const HOVER_BRIGHTNESS = 1.6;
+
 // ── Component ───────────────────────────────────────────────────────────────
 
 export default function HeroBloom() {
+  const svgRef = useRef<SVGSVGElement>(null);
   const breathTweens = useRef<gsap.core.Tween[]>([]);
+  const introDone = useRef(false);
+  const hoveredIds = useRef(new Set<string>());
+  const rafPending = useRef(false);
 
   useEffect(() => {
     const tl = gsap.timeline();
@@ -288,9 +296,73 @@ export default function HeroBloom() {
           }),
         );
       }
+      introDone.current = true;
     }, [], 3.2);
 
+    const onMouseMove = (e: MouseEvent) => {
+      if (!introDone.current || !svgRef.current || rafPending.current) return;
+      rafPending.current = true;
+
+      requestAnimationFrame(() => {
+        rafPending.current = false;
+        const svg = svgRef.current;
+        if (!svg) return;
+
+        const rect = svg.getBoundingClientRect();
+        if (
+          e.clientX < rect.left - 80 || e.clientX > rect.right + 80 ||
+          e.clientY < rect.top - 80 || e.clientY > rect.bottom + 80
+        ) {
+          if (hoveredIds.current.size > 0) {
+            hoveredIds.current.forEach(id => {
+              gsap.to(`#${id}-g`, { scale: 1, filter: 'brightness(1)', svgOrigin: `${nodeMap[id].tx} ${nodeMap[id].ty}`, duration: 0.4, overwrite: true });
+            });
+            hoveredIds.current.clear();
+          }
+          return;
+        }
+
+        const pt = svg.createSVGPoint();
+        pt.x = e.clientX;
+        pt.y = e.clientY;
+        const ctm = svg.getScreenCTM();
+        if (!ctm) return;
+        const svgPt = pt.matrixTransform(ctm.inverse());
+
+        const newHovered = new Set<string>();
+
+        for (const n of allNodes) {
+          const dx = n.tx - svgPt.x;
+          const dy = n.ty - svgPt.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          const factor = Math.max(0, 1 - dist / HOVER_RADIUS);
+
+          if (factor > 0) {
+            newHovered.add(n.id);
+            gsap.to(`#${n.id}-g`, {
+              scale: 1 + factor * (HOVER_SCALE - 1),
+              filter: `brightness(${1 + factor * (HOVER_BRIGHTNESS - 1)})`,
+              svgOrigin: `${n.tx} ${n.ty}`,
+              duration: 0.2,
+              overwrite: true,
+            });
+          }
+        }
+
+        hoveredIds.current.forEach(id => {
+          if (!newHovered.has(id)) {
+            gsap.to(`#${id}-g`, { scale: 1, filter: 'brightness(1)', svgOrigin: `${nodeMap[id].tx} ${nodeMap[id].ty}`, duration: 0.4, overwrite: true });
+          }
+        });
+
+        hoveredIds.current = newHovered;
+      });
+    };
+
+    document.addEventListener('mousemove', onMouseMove);
+
     return () => {
+      document.removeEventListener('mousemove', onMouseMove);
       tl.kill();
       breathTweens.current.forEach(tw => tw.kill());
       breathTweens.current = [];
@@ -299,6 +371,7 @@ export default function HeroBloom() {
 
   return (
     <svg
+      ref={svgRef}
       viewBox="0 0 1000 1000"
       preserveAspectRatio="xMidYMid slice"
       className="w-full h-full"
@@ -336,7 +409,7 @@ export default function HeroBloom() {
 
       <g>
         {allNodes.map(n => (
-          <g key={n.id}>
+          <g key={n.id} id={`${n.id}-g`}>
             <circle
               id={`${n.id}-ring`}
               cx={n.tx} cy={n.ty} r={0}
