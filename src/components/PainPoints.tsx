@@ -45,8 +45,8 @@ export default function PainPoints() {
   return (
     <section className="relative py-24 px-8 lg:px-16 overflow-hidden">
       <div className="max-w-3xl mx-auto">
-        <h2 className="pain-title text-3xl lg:text-4xl font-bold text-primary tracking-tight mb-10 text-center">
-          Most students study <span className="font-accent gradient-text">blind</span>.
+        <h2 className="pain-title text-h2 lg:text-h1 font-bold text-primary mb-10 text-center">
+          Most students study <span className="font-accent italic gradient-text">blind</span>.
         </h2>
 
         <div className="space-y-6">
@@ -56,7 +56,7 @@ export default function PainPoints() {
             className="pain-item flex items-center gap-4 p-6 rounded-xl border border-primary/[0.06] bg-surface/50"
           >
             <span className="flex-shrink-0 w-2 h-2 rounded-full bg-danger" />
-            <p className="text-lg lg:text-xl font-medium text-primary leading-snug">
+            <p className="text-body-lg font-medium text-primary leading-snug">
               {point}
             </p>
           </div>

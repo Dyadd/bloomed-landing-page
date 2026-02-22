@@ -140,7 +140,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
         {/* Header */}
         <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-primary/5">
           <div>
-            <h3 className="text-base font-bold text-primary">Get early access</h3>
+            <h3 className="text-body font-bold text-primary">Get early access</h3>
           </div>
           <button
             onClick={handleClose}
@@ -159,13 +159,13 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               <div className="w-12 h-12 rounded-full bg-success/10 border border-success/25 flex items-center justify-center mx-auto mb-4">
                 <span className="text-success text-xl">&#10003;</span>
               </div>
-              <h4 className="text-lg font-bold text-primary mb-2">You're on the list.</h4>
-              <p className="text-sm text-muted leading-relaxed max-w-xs mx-auto">
+              <h4 className="text-body-lg font-bold text-primary mb-2">You're on the list.</h4>
+              <p className="text-body-sm text-muted max-w-xs mx-auto">
                 {beta
                   ? "We'll be in touch soon with beta access. Thanks for helping shape Bloomed."
                   : "We'll email you when Bloomed is ready. Keep studying — we're building something great."}
               </p>
-              <button onClick={handleClose} className="btn-primary mt-6 mx-auto text-sm px-5 py-2.5">
+              <button onClick={handleClose} className="btn-primary mt-6 mx-auto text-body-sm px-5 py-2.5">
                 Close
               </button>
             </div>
@@ -180,21 +180,21 @@ export default function LeadForm({ isOpen, onClose }: Props) {
                   autoFocus
                   value={name}
                   onChange={e => setName(e.target.value)}
-                  className="form-input text-sm"
+                  className="form-input text-body-sm"
                 />
                 <input
                   type="email"
                   placeholder="your@email.com"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  className="form-input text-sm"
+                  className="form-input text-body-sm"
                 />
               </div>
 
               {/* Step 2: Role — appears after name + email */}
               {hasIdentity && (
                 <FadeIn>
-                  <label className="block text-xs font-medium text-muted mb-2">I am a...</label>
+                  <label className="block text-caption font-medium text-muted mb-2">I am a...</label>
                   <div className="grid grid-cols-2 gap-2">
                     <ChoiceButton
                       label="Medical student"
@@ -213,11 +213,11 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               {/* Step 3: University — appears after role (students only) */}
               {hasRole && role === 'student' && (
                 <FadeIn>
-                  <label className="block text-xs font-medium text-muted mb-1.5">University</label>
+                  <label className="block text-caption font-medium text-muted mb-1.5">University</label>
                   <select
                     value={university}
                     onChange={e => setUniversity(e.target.value)}
-                    className="form-input text-sm cursor-pointer"
+                    className="form-input text-body-sm cursor-pointer"
                     style={{
                       appearance: 'none',
                       backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'12\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'%2378756e\' stroke-width=\'2\'%3E%3Cpolyline points=\'6 9 12 15 18 9\'%3E%3C/polyline%3E%3C/svg%3E")',
@@ -236,7 +236,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               {/* Step 4: Degree level — appears after university, skipped for junior doctors */}
               {hasUniversity && role === 'student' && (
                 <FadeIn>
-                  <label className="block text-xs font-medium text-muted mb-2">Where are you in your degree?</label>
+                  <label className="block text-caption font-medium text-muted mb-2">Where are you in your degree?</label>
                   <div className="space-y-1.5">
                     {LEVELS.map(lvl => (
                       <ChoiceButton
@@ -255,7 +255,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               {/* Step 5: Beta preference — appears when everything above is done */}
               {((role === 'junior') || (hasLevel && hasUniversity)) && (
                 <FadeIn>
-                  <label className="block text-xs font-medium text-muted mb-2">How would you like to join?</label>
+                  <label className="block text-caption font-medium text-muted mb-2">How would you like to join?</label>
                   <div className="space-y-2">
                     <ChoiceButton
                       label="I'd like to get started now"
@@ -272,9 +272,9 @@ export default function LeadForm({ isOpen, onClose }: Props) {
                       full
                     />
                   </div>
-                  {submitError && <p className="text-xs text-danger mt-2">{submitError}</p>}
+                  {submitError && <p className="text-caption text-danger mt-2">{submitError}</p>}
                   {isSubmitting && (
-                    <p className="text-xs text-muted mt-2 text-center">Joining...</p>
+                    <p className="text-caption text-muted mt-2 text-center">Joining...</p>
                   )}
                 </FadeIn>
               )}
@@ -322,8 +322,8 @@ function ChoiceButton({
           : 'border-primary/[0.08] hover:border-accent/30 bg-transparent'
       }`}
     >
-      <span className="block text-sm font-medium text-primary">{label}</span>
-      {desc && <span className="block text-xs text-muted mt-0.5">{desc}</span>}
+      <span className="block text-body-sm font-medium text-primary">{label}</span>
+      {desc && <span className="block text-caption text-muted mt-0.5">{desc}</span>}
     </button>
   );
 }

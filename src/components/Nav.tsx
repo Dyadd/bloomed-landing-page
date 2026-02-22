@@ -21,21 +21,20 @@ export default function Nav({ onOpenForm }: Props) {
           : 'bg-transparent'
       }`}
     >
-      {/* Logo */}
-      <a href="#" className="flex items-center gap-2.5" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-        <img src="/logo.svg" alt="Bloomed" className="h-8 w-auto" />
+      <a href="#" className="flex items-center" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+        <span className="font-accent italic text-h3 gradient-text">Bloomed</span>
       </a>
 
       <div className="flex items-center gap-2 sm:gap-3">
         {/* FAQ — hidden on mobile, visible on sm+ */}
         <button
           onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
-          className="btn-ghost text-sm hidden sm:inline-flex"
+          className="btn-ghost text-body-sm hidden sm:inline-flex"
         >
           FAQ
         </button>
 
-        <button onClick={onOpenForm} className="btn-ghost text-sm">
+        <button onClick={onOpenForm} className="btn-ghost text-body-sm">
           <span className="hidden sm:inline">Get early access</span>
           <span className="sm:hidden">Join</span>
         </button>

@@ -24,19 +24,19 @@ export default function CtaSection({ onOpenForm }: Props) {
           </span>
         </div>
 
-        <h2 className="text-4xl lg:text-6xl font-bold text-primary mb-6 leading-tight tracking-tight">
+        <h2 className="text-h1 lg:text-display font-bold text-primary mb-6">
           Built for{' '}
           <span className="gradient-text">Australian</span>
           <br />
           medical students.
         </h2>
 
-        <p className="text-xl text-muted leading-relaxed mb-10 max-w-xl mx-auto">
+        <p className="text-body-lg text-muted mb-10 max-w-xl mx-auto">
           Bloomed is launching across MD programs in Australia. Get early access
           and help shape what we build.
         </p>
 
-        <button onClick={onOpenForm} className="btn-primary text-base px-9 py-[15px]">
+        <button onClick={onOpenForm} className="btn-primary text-body px-9 py-[15px]">
           Get early access
         </button>
 

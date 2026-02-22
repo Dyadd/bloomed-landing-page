@@ -31,7 +31,7 @@ export default function FaqSection() {
   return (
     <section id="faq" className="relative py-24 px-8 lg:px-16">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-3xl lg:text-4xl font-bold text-primary mb-12 text-center tracking-tight">
+        <h2 className="text-h2 lg:text-h1 font-bold text-primary mb-12 text-center">
           Frequently Asked Questions
         </h2>
 
@@ -48,7 +48,7 @@ export default function FaqSection() {
                   onClick={() => toggle(i)}
                   className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left cursor-pointer"
                 >
-                  <span className="text-[15px] font-semibold text-primary leading-snug">
+                  <span className="text-body font-semibold text-primary leading-snug">
                     {faq.q}
                   </span>
                   <span
@@ -70,7 +70,7 @@ export default function FaqSection() {
                   }}
                 >
                   <div className="overflow-hidden">
-                    <p className="px-6 pb-5 text-[15px] text-muted leading-relaxed">
+                    <p className="px-6 pb-5 text-body text-muted">
                       {faq.a}
                     </p>
                   </div>

@@ -5,7 +5,7 @@ export default function Footer() {
         <a href="#" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }} className="flex items-center gap-2">
           <img src="/logo.svg" alt="Bloomed" className="h-6 w-auto" />
         </a>
-        <p className="text-xs text-muted/60">
+        <p className="text-caption text-muted/60">
           &copy; {new Date().getFullYear()} Bloomed. Built for Australian medical students.
         </p>
       </div>

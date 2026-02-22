@@ -106,10 +106,10 @@ export default function NarrativeSection() {
     <section className="relative">
       {/* Section header — centered, large, with accent serif on brand name */}
       <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-20 pb-4 text-center">
-        <h2 className="text-4xl lg:text-[3.5rem] font-bold text-primary leading-tight tracking-tight mb-5">
-          How <span className="font-accent gradient-text">Bloomed</span> Works.
+        <h2 className="text-h1 lg:text-h1-xl font-bold text-primary mb-5">
+          How <span className="font-accent italic gradient-text">Bloomed</span> Works.
         </h2>
-        <p className="text-lg text-muted leading-relaxed max-w-xl mx-auto">
+        <p className="text-body-lg text-muted max-w-xl mx-auto">
           Uni teaching is one-size-fits-all. Bloomed builds a personalised learning engine around you - mapping what you know, structuring what you need to learn, and making sure it sticks.
         </p>
       </div>
@@ -130,18 +130,18 @@ export default function NarrativeSection() {
                   {p.number}
                 </span>
                 {/* Headline */}
-                <h3 className="text-3xl lg:text-4xl font-bold mb-5 leading-tight text-primary">
+                <h3 className="text-h2 lg:text-h1 font-bold mb-5 text-primary">
                   The {p.label}
                 </h3>
 
                 {/* Body */}
-                <p className="text-lg text-muted leading-relaxed mb-6">
+                <p className="text-body-lg text-muted mb-6">
                   {p.body}
                 </p>
 
                 {/* Callout */}
                 <div className="border-l-2 border-accent/30 pl-5 py-1">
-                  <p className="text-sm text-accent/70 italic leading-relaxed">
+                  <p className="text-body-sm text-accent/70 italic">
                     {p.callout}
                   </p>
                 </div>
