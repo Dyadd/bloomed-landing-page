@@ -4,7 +4,7 @@ interface Props {
 
 export default function CtaSection({ onOpenForm }: Props) {
   return (
-    <section className="relative py-36 px-8 lg:px-16 overflow-hidden">
+    <section className="relative py-28 px-8 lg:px-16 overflow-hidden">
       {/* Accent glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div

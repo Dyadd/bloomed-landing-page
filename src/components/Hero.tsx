@@ -18,7 +18,7 @@ export default function Hero({ onOpenForm }: Props) {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-8 lg:px-16 overflow-hidden text-center">
+    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-24 px-8 lg:px-16 overflow-hidden text-center">
       {/* Subtle dot-grid background */}
       <div className="absolute inset-0 dot-grid opacity-60 pointer-events-none" />
 
@@ -40,7 +40,7 @@ export default function Hero({ onOpenForm }: Props) {
         <h1 className="hero-headline font-bold mb-6">
           <span className="text-h3 lg:text-h1 text-primary">Diagnose your weaknesses.</span>
           <br />
-          <span className="font-accent italic gradient-text text-display lg:text-display-2xl">Master Medicine.</span>
+          <span className="font-accent italic gradient-text text-h1 lg:text-display">Master Medicine.</span>
         </h1>
 
         <p className="hero-sub text-body-lg text-muted max-w-2xl mx-auto mb-4">

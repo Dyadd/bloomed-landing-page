@@ -105,8 +105,8 @@ export default function NarrativeSection() {
   return (
     <section className="relative">
       {/* Section header — centered, large, with accent serif on brand name */}
-      <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-20 pb-4 text-center">
-        <h2 className="text-h1 lg:text-h1-xl font-bold text-primary mb-5">
+      <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-24 pb-8 text-center">
+        <h2 className="text-h2 lg:text-h1 font-bold text-primary mb-6">
           How <span className="font-accent italic gradient-text">Bloomed</span> Works.
         </h2>
         <p className="text-body-lg text-muted max-w-xl mx-auto">
@@ -130,7 +130,7 @@ export default function NarrativeSection() {
                   {p.number}
                 </span>
                 {/* Headline */}
-                <h3 className="text-h2 lg:text-h1 font-bold mb-5 text-primary">
+                <h3 className="text-h2 lg:text-h1 font-bold mb-4 text-primary">
                   The {p.label}
                 </h3>
 

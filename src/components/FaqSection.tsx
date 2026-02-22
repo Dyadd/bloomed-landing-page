@@ -31,7 +31,7 @@ export default function FaqSection() {
   return (
     <section id="faq" className="relative py-24 px-8 lg:px-16">
       <div className="max-w-3xl mx-auto">
-        <h2 className="text-h2 lg:text-h1 font-bold text-primary mb-12 text-center">
+        <h2 className="text-h2 lg:text-h1 font-bold text-primary mb-10 text-center">
           Frequently Asked Questions
         </h2>
 
