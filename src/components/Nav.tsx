@@ -30,6 +30,7 @@ export default function Nav({ onOpenForm }: Props) {
         <button
           onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
           className="btn-ghost text-body-sm hidden sm:inline-flex py-[13px]"
+          style={{ background: 'rgba(26, 50, 224, 0.10)', borderColor: 'rgba(26, 50, 224, 0.25)' }}
         >
           FAQ
         </button>
