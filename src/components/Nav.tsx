@@ -34,7 +34,7 @@ export default function Nav({ onOpenForm }: Props) {
           FAQ
         </button>
 
-        <button onClick={onOpenForm} className="btn-primary text-body-sm" style={{ background: '#1a32e0' }}>
+        <button onClick={onOpenForm} className="btn-primary text-body-sm" style={{ backgroundColor: '#1a32e0' }}>
           <span className="hidden sm:inline">Get early access</span>
           <span className="sm:hidden">Join</span>
         </button>

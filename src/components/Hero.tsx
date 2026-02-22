@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { gsap } from 'gsap';
 import HeroBloom from './HeroBloom';
 
@@ -15,6 +15,25 @@ export default function Hero({ onOpenForm }: Props) {
       gsap.from('.hero-cta',      { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 1.70 });
     });
     return () => ctx.revert();
+  }, []);
+
+  const handleBtnMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = e.currentTarget;
+    const r = btn.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width;
+    const y = (e.clientY - r.top) / r.height;
+    btn.style.setProperty('--rx', `${(y - 0.5) * -7}deg`);
+    btn.style.setProperty('--ry', `${(x - 0.5) * 7}deg`);
+    btn.style.setProperty('--mx', `${x * 100}%`);
+    btn.style.setProperty('--my', `${y * 100}%`);
+  }, []);
+
+  const handleBtnLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    const btn = e.currentTarget;
+    btn.style.setProperty('--rx', '0deg');
+    btn.style.setProperty('--ry', '0deg');
+    btn.style.setProperty('--mx', '50%');
+    btn.style.setProperty('--my', '50%');
   }, []);
 
   return (
@@ -53,7 +72,13 @@ export default function Hero({ onOpenForm }: Props) {
         </p>
 
         <div className="hero-cta flex justify-center">
-          <button onClick={onOpenForm} className="btn-primary text-body px-7 py-[14px]" style={{ background: '#1a32e0' }}>
+          <button
+            onClick={onOpenForm}
+            onMouseMove={handleBtnMove}
+            onMouseLeave={handleBtnLeave}
+            className="btn-primary text-body px-7 py-[14px]"
+            style={{ backgroundColor: '#1a32e0' }}
+          >
             Get early access
           </button>
         </div>
