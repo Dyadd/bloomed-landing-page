@@ -107,7 +107,7 @@ export default function NarrativeSection() {
       {/* Section header — centered, large, with accent serif on brand name */}
       <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-24 pb-8 text-center">
         <h2 className="text-h2 lg:text-h1 font-bold text-primary mb-6">
-          How <span className="font-accent italic gradient-text">Bloomed</span> Works.
+          How <span className="font-accent italic gradient-text">Bloomed</span> Works
         </h2>
         <p className="text-body-lg text-muted max-w-xl mx-auto">
           Uni teaching is one-size-fits-all. Bloomed builds a personalised learning engine around you - mapping what you know, structuring what you need to learn, and making sure it sticks.
