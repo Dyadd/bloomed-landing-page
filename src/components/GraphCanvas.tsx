@@ -29,7 +29,7 @@ function GraphCanvas({ nodes, edges }: Props) {
   return (
     <svg
       viewBox="0 0 740 500"
-      className="w-full h-full"
+      className="w-full h-full select-none"
       style={{ overflow: 'visible' }}
     >
       <defs>
