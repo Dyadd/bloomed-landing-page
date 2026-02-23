@@ -58,7 +58,7 @@ export default function PainPoints() {
           scrollTrigger: {
             trigger: '.pain-row',
             start: 'top 85%',
-            toggleActions: 'play none none reverse',
+            toggleActions: 'play none none none',
           },
           delay: REVEAL_ORDER.indexOf(i) * 0.12,
         },
@@ -68,6 +68,7 @@ export default function PainPoints() {
 
   const handleEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
     gsap.to(e.currentTarget, {
+      opacity: 1,
       rotate: 0,
       x: 0,
       y: 0,
@@ -83,6 +84,7 @@ export default function PainPoints() {
   const handleLeave = useCallback((e: React.MouseEvent<HTMLDivElement>, i: number) => {
     const { rotate, offsetX, offsetY } = CARD_TRANSFORMS[i];
     gsap.to(e.currentTarget, {
+      opacity: 1,
       rotate,
       x: offsetX,
       y: offsetY,
