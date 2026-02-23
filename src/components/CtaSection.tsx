@@ -1,10 +1,19 @@
+import CtaAustraliaBloom from './CtaAustraliaBloom';
+
 interface Props {
   onOpenForm: () => void;
 }
 
 export default function CtaSection({ onOpenForm }: Props) {
   return (
-    <section className="relative py-28 px-8 lg:px-16 overflow-hidden">
+    <section className="relative pt-36 lg:pt-44 pb-36 lg:pb-44 px-8 lg:px-16 overflow-hidden">
+      {/* Australia node network — behind text */}
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-full max-w-4xl h-full opacity-60">
+          <CtaAustraliaBloom />
+        </div>
+      </div>
+
       {/* Accent glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
@@ -29,11 +38,11 @@ export default function CtaSection({ onOpenForm }: Props) {
         </h2>
 
         <p className="text-body-lg text-muted mb-10 max-w-xl mx-auto">
-          Bloomed is launching across MD programs in Australia. Get early access
+          Bloomed is launching across MD programs in Australia. <br /> Get early access
           and help shape what we build.
         </p>
 
-        <button onClick={onOpenForm} className="btn-primary text-body px-9 py-[15px]">
+        <button onClick={onOpenForm} className="btn-primary text-body px-7 py-[14px]" style={{ backgroundColor: '#1a32e0' }}>
           Get early access
         </button>
 

@@ -111,7 +111,9 @@ export default function NarrativeSection() {
             How <span className="font-accent italic text-blue-300">Bloomed</span> Works
           </h2>
           <p className="text-body-lg text-white/60 max-w-xl mx-auto">
-            Uni teaching is one-size-fits-all. Bloomed builds a personalised learning engine around you - mapping what you know, structuring what you need to learn, and making sure it sticks.
+            University teaching is one-size-fits-all.
+            <br />
+            Bloomed is <span style={{ color: '#93c5fd' }}>your personalised learning engine</span> - mapping what you know, structuring what you need to learn, and making sure it sticks.
           </p>
         </div>
 
@@ -125,13 +127,13 @@ export default function NarrativeSection() {
                 ref={el => { stepRefs.current[i] = el; }}
                 className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
               >
-                <div className="step-content relative max-w-lg pt-24 lg:pt-28">
+                <div className="step-content relative max-w-lg pt-0">
                   {/* Large faded background number */}
-                  <span className="absolute -top-40 lg:-top-48 left-0 text-[8rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.3] select-none pointer-events-none">
+                  <span className="absolute -top-[8rem] lg:-top-[10rem] left-0 text-[8rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.3] select-none pointer-events-none">
                     {p.number}
                   </span>
                   {/* Headline */}
-                  <h3 className="text-h2 lg:text-h1 font-bold mb-4 text-white mt-2">
+                  <h3 className={`text-h2 lg:text-h1 font-bold mb-4 text-white ${i === 2 ? 'mt-2' : 'mt-0'}`}>
                     The {p.label}
                   </h3>
 

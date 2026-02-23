@@ -21,7 +21,8 @@ export default function Nav({ onOpenForm }: Props) {
           : 'bg-transparent'
       }`}
     >
-      <a href="#" className="flex items-center" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+      <a href="#" className="flex items-center gap-2" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+        <img src="/logo.png" alt="Bloomed" className="h-8 w-auto" />
         <span className="font-accent italic font-bold text-h3 gradient-text">Bloomed</span>
       </a>
 

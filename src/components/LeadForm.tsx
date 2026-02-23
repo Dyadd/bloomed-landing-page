@@ -197,12 +197,12 @@ export default function LeadForm({ isOpen, onClose }: Props) {
                   <label className="block text-caption font-medium text-muted mb-2">I am a...</label>
                   <div className="grid grid-cols-2 gap-2">
                     <ChoiceButton
-                      label="Medical student"
+                      label="Medical Student"
                       selected={role === 'student'}
                       onClick={() => { setRole('student'); setLevel(''); }}
                     />
                     <ChoiceButton
-                      label="Junior doctor"
+                      label="Junior Doctor"
                       selected={role === 'junior'}
                       onClick={() => { setRole('junior'); setLevel(''); }}
                     />
