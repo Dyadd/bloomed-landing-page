@@ -30,9 +30,11 @@ const CATEGORY_COLORS: Record<string, string> = {
 
 const LEARNING_COLOR = '#f97316'; // warm orange for forming connections
 
-/** Read a space-separated RGB value from a CSS custom property, e.g. "44 42 38" */
+/** Read a space-separated RGB value from a CSS custom property, e.g. "44 42 38".
+ *  Reads from a graph edge element so local CSS overrides (e.g. dark pill) are respected. */
 function getThemeRgb(varName: string): string {
-  return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+  const el = document.getElementById(`edge-${GRAPH_EDGES[0]?.id}`) ?? document.documentElement;
+  return getComputedStyle(el).getPropertyValue(varName).trim();
 }
 
 /** Build an rgba() string from space-separated RGB + optional alpha */

@@ -104,77 +104,86 @@ export default function NarrativeSection() {
 
   return (
     <section className="relative">
-      {/* Section header — centered, large, with accent serif on brand name */}
-      <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-24 pb-8 text-center">
-        <h2 className="text-h2 lg:text-h1 font-bold text-primary mb-6">
-          How <span className="font-accent italic gradient-text">Bloomed</span> Works
-        </h2>
-        <p className="text-body-lg text-muted max-w-xl mx-auto">
-          Uni teaching is one-size-fits-all. Bloomed builds a personalised learning engine around you - mapping what you know, structuring what you need to learn, and making sure it sticks.
-        </p>
-      </div>
+      <div className="bg-[#0f1a3e] rounded-[3rem] lg:rounded-[4rem] mx-4 lg:mx-10 py-16 lg:py-20 text-white">
+        {/* Section header — centered, large, with accent serif on brand name */}
+        <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-32 lg:pt-44 pb-2 text-center">
+          <h2 className="text-h2 lg:text-h1 font-bold text-white mb-6">
+            How <span className="font-accent italic text-blue-300">Bloomed</span> Works
+          </h2>
+          <p className="text-body-lg text-white/60 max-w-xl mx-auto">
+            Uni teaching is one-size-fits-all. Bloomed builds a personalised learning engine around you - mapping what you know, structuring what you need to learn, and making sure it sticks.
+          </p>
+        </div>
 
-      <div className="narrative-container max-w-[1400px] mx-auto">
+        <div className="narrative-container max-w-[1400px] mx-auto">
 
-        {/* LEFT — scrollable text steps */}
-        <div>
-          {PHASES.map((p, i) => (
-            <div
-              key={p.phase}
-              ref={el => { stepRefs.current[i] = el; }}
-              className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
-            >
-              <div className="step-content relative max-w-lg">
-                {/* Large faded background number */}
-                <span className="absolute -top-32 lg:-top-[9.5rem] left-0 text-[8rem] lg:text-[10rem] font-bold leading-none text-primary/[0.04] select-none pointer-events-none">
-                  {p.number}
-                </span>
-                {/* Headline */}
-                <h3 className="text-h2 lg:text-h1 font-bold mb-4 text-primary">
-                  The {p.label}
-                </h3>
+          {/* LEFT — scrollable text steps */}
+          <div>
+            {PHASES.map((p, i) => (
+              <div
+                key={p.phase}
+                ref={el => { stepRefs.current[i] = el; }}
+                className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
+              >
+                <div className="step-content relative max-w-lg">
+                  {/* Large faded background number */}
+                  <span className="absolute -top-32 lg:-top-[9.5rem] left-0 text-[8rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.12] select-none pointer-events-none">
+                    {p.number}
+                  </span>
+                  {/* Headline */}
+                  <h3 className="text-h2 lg:text-h1 font-bold mb-4 text-white">
+                    The {p.label}
+                  </h3>
 
-                {/* Body */}
-                <p className="text-body-lg text-muted mb-6">
-                  {p.body}
-                </p>
-
-                {/* Callout */}
-                <div className="border-l-2 border-accent/30 pl-5 py-1">
-                  <p className="text-body-sm text-accent/70 italic">
-                    {p.callout}
+                  {/* Body */}
+                  <p className="text-body-lg text-white/60 mb-6">
+                    {p.body}
                   </p>
+
+                  {/* Callout */}
+                  <div className="border-l-2 border-blue-300/30 pl-5 py-1">
+                    <p className="text-body-sm text-blue-200/70 italic">
+                      {p.callout}
+                    </p>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+
+          {/* RIGHT — sticky graph panel (desktop only) */}
+          <div className="hidden lg:flex sticky top-0 h-screen items-center justify-center p-10">
+            {/* Colour-shifting ambient glow behind the graph */}
+            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+              <div
+                className="w-[420px] h-[420px] rounded-full transition-all duration-[1200ms] opacity-10"
+                style={{
+                  background:
+                    phase === 'diagnostic'
+                      ? 'radial-gradient(circle, var(--color-accent), transparent 70%)'
+                      : phase === 'learning'
+                      ? 'radial-gradient(circle, #f97316, transparent 70%)'
+                      : phase === 'solidify'
+                      ? 'radial-gradient(circle, #30a46c, transparent 70%)'
+                      : 'radial-gradient(circle, var(--color-accent), transparent 70%)',
+                }}
+              />
             </div>
-          ))}
-        </div>
 
-        {/* RIGHT — sticky graph panel (desktop only) */}
-        <div className="hidden lg:flex sticky top-0 h-screen items-center justify-center p-10">
-          {/* Colour-shifting ambient glow behind the graph */}
-          <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+            {/* Graph — override edge/label colours for dark background */}
             <div
-              className="w-[420px] h-[420px] rounded-full transition-all duration-[1200ms] opacity-10"
+              className="relative w-full max-w-[640px]"
               style={{
-                background:
-                  phase === 'diagnostic'
-                    ? 'radial-gradient(circle, var(--color-accent), transparent 70%)'
-                    : phase === 'learning'
-                    ? 'radial-gradient(circle, #f97316, transparent 70%)'
-                    : phase === 'solidify'
-                    ? 'radial-gradient(circle, #30a46c, transparent 70%)'
-                    : 'radial-gradient(circle, var(--color-accent), transparent 70%)',
-              }}
-            />
+                '--color-primary-rgb': '255 255 255',
+                '--color-edge': 'rgba(255, 255, 255, 0.18)',
+                '--color-label': 'rgba(255, 255, 255, 0.6)',
+              } as React.CSSProperties}
+            >
+              <KnowledgeGraph phase={phase} />
+            </div>
           </div>
 
-          {/* Graph */}
-          <div className="relative w-full max-w-[640px]">
-            <KnowledgeGraph phase={phase} />
-          </div>
         </div>
-
       </div>
     </section>
   );

@@ -96,9 +96,9 @@ export default function PainPoints() {
   }, []);
 
   return (
-    <section className="relative py-24 px-8 lg:px-16 overflow-hidden">
+    <section className="relative pt-24 pb-32 lg:pb-40 px-8 lg:px-16 overflow-hidden">
       <h2 className="pain-title text-h2 lg:text-h1 font-bold text-primary mb-14 text-center">
-        Most students study <span className="font-accent italic gradient-text">blind</span>
+        Most Students Study <span className="font-accent italic gradient-text">Blind</span>
       </h2>
 
       <div className="pain-row flex flex-nowrap justify-center items-center gap-5 lg:gap-7">
