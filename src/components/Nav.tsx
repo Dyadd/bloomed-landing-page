@@ -22,7 +22,7 @@ export default function Nav({ onOpenForm }: Props) {
       }`}
     >
       <a href="#" className="flex items-center" onClick={(e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-        <span className="font-accent italic text-h3 gradient-text">Bloomed</span>
+        <span className="font-accent italic font-bold text-h3 gradient-text">Bloomed</span>
       </a>
 
       <div className="flex items-center gap-2 sm:gap-3">

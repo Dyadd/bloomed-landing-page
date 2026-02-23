@@ -125,13 +125,13 @@ export default function NarrativeSection() {
                 ref={el => { stepRefs.current[i] = el; }}
                 className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
               >
-                <div className="step-content relative max-w-lg">
+                <div className="step-content relative max-w-lg pt-24 lg:pt-28">
                   {/* Large faded background number */}
-                  <span className="absolute -top-32 lg:-top-[9.5rem] left-0 text-[8rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.12] select-none pointer-events-none">
+                  <span className="absolute -top-40 lg:-top-48 left-0 text-[8rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.3] select-none pointer-events-none">
                     {p.number}
                   </span>
                   {/* Headline */}
-                  <h3 className="text-h2 lg:text-h1 font-bold mb-4 text-white">
+                  <h3 className="text-h2 lg:text-h1 font-bold mb-4 text-white mt-2">
                     The {p.label}
                   </h3>
 
