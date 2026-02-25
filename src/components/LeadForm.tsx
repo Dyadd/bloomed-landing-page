@@ -140,7 +140,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
         {/* Header */}
         <div className="flex items-start justify-between px-6 pt-5 pb-4 border-b border-primary/5">
           <div>
-            <h3 className="text-body font-bold text-primary">Get early access</h3>
+            <h3 className="text-body font-bold text-primary">Get Early Access</h3>
           </div>
           <button
             onClick={handleClose}

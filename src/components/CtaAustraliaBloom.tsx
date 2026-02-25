@@ -83,8 +83,8 @@ COAST.forEach(([x, y], i) => {
     `au-c${i}`,
     x + jitter(s, 3), y + jitter(s + 50, 3),
     COLORS[i % COLORS.length],
-    3 + srand(s + 100) * 1.5,
-    7 + srand(s + 100) * 3,
+    4 + srand(s + 100) * 2,
+    9 + srand(s + 100) * 4,
   );
 });
 
@@ -98,7 +98,7 @@ TAS.forEach(([x, y], i) => {
     `au-t${i}`,
     x + jitter(s, 2), y + jitter(s + 50, 2),
     COLORS[(i + 2) % COLORS.length],
-    2.5, 5.5,
+    3.5, 8,
   );
 });
 
@@ -114,8 +114,8 @@ INTERIOR.forEach(([x, y], i) => {
     `au-i${i}`,
     x + jitter(s, 5), y + jitter(s + 50, 5),
     COLORS[(i + 1) % COLORS.length],
-    2.5 + srand(s + 100),
-    5 + srand(s + 100) * 2,
+    3.5 + srand(s + 100) * 1.5,
+    7 + srand(s + 100) * 2.5,
   );
 });
 
@@ -180,19 +180,19 @@ export default function CtaAustraliaBloom() {
       for (let i = 0; i < coastLen; i++) {
         const n = nodeMap[`au-c${i}`];
         const delay = 0.2 + (i / coastLen) * traceDur;
-        const sm = 0.7 + srand(i * 67) * 0.5;
+        const sm = 0.9 + srand(i * 67) * 0.4;
         const vibrant = srand(i * 31 + 17) < 0.15;
 
         tl.to(`#${n.id}-dot`, {
           attr: { r: n.dotR * sm },
-          opacity: vibrant ? 0.7 : 0.35,
+          opacity: vibrant ? 0.92 : 0.55,
           duration: 0.35,
           ease: 'back.out(2)',
         }, delay);
 
         tl.to(`#${n.id}-ring`, {
           attr: { r: n.ringR * sm },
-          opacity: vibrant ? 0.18 : 0.07,
+          opacity: vibrant ? 0.32 : 0.14,
           duration: 0.4,
           ease: 'power2.out',
         }, delay);
@@ -201,7 +201,7 @@ export default function CtaAustraliaBloom() {
       // Coast edges — appear just after their nodes
       for (let i = 0; i < coastLen; i++) {
         const delay = 0.2 + ((i + 0.5) / coastLen) * traceDur + 0.08;
-        const opacity = 0.12 + srand(i * 23 + 13) * 0.15;
+        const opacity = 0.2 + srand(i * 23 + 13) * 0.2;
         tl.to(`#au-e${i}`, { opacity, duration: 0.4 }, delay);
       }
 
@@ -210,15 +210,15 @@ export default function CtaAustraliaBloom() {
       for (let i = 0; i < TAS.length; i++) {
         const n = nodeMap[`au-t${i}`];
         const delay = tasStart + i * 0.1;
-        const sm = 0.7 + srand((i + 100) * 67) * 0.4;
+        const sm = 0.9 + srand((i + 100) * 67) * 0.35;
 
         tl.to(`#${n.id}-dot`, {
-          attr: { r: n.dotR * sm }, opacity: 0.3,
+          attr: { r: n.dotR * sm }, opacity: 0.5,
           duration: 0.3, ease: 'back.out(2)',
         }, delay);
 
         tl.to(`#${n.id}-ring`, {
-          attr: { r: n.ringR * sm }, opacity: 0.06,
+          attr: { r: n.ringR * sm }, opacity: 0.12,
           duration: 0.35,
         }, delay);
       }
@@ -227,26 +227,26 @@ export default function CtaAustraliaBloom() {
       const tasEdgeStart = coastLen;
       for (let i = 0; i < TAS.length; i++) {
         tl.to(`#au-e${tasEdgeStart + i}`, {
-          opacity: 0.1 + srand((i + 50) * 23) * 0.08,
+          opacity: 0.18 + srand((i + 50) * 23) * 0.1,
           duration: 0.35,
         }, tasStart + (i + 0.5) * 0.1);
       }
-      tl.to(`#au-e${tasEdgeStart + TAS.length}`, { opacity: 0.08, duration: 0.4 }, tasStart + 0.15);
+      tl.to(`#au-e${tasEdgeStart + TAS.length}`, { opacity: 0.14, duration: 0.4 }, tasStart + 0.15);
 
       // Interior nodes
       const intStart = 1.2;
       for (let i = 0; i < INTERIOR.length; i++) {
         const n = nodeMap[`au-i${i}`];
         const delay = intStart + i * 0.12;
-        const sm = 0.6 + srand((i + 200) * 67) * 0.4;
+        const sm = 0.85 + srand((i + 200) * 67) * 0.4;
 
         tl.to(`#${n.id}-dot`, {
-          attr: { r: n.dotR * sm }, opacity: 0.2,
+          attr: { r: n.dotR * sm }, opacity: 0.4,
           duration: 0.3, ease: 'back.out(2)',
         }, delay);
 
         tl.to(`#${n.id}-ring`, {
-          attr: { r: n.ringR * sm }, opacity: 0.04,
+          attr: { r: n.ringR * sm }, opacity: 0.1,
           duration: 0.35,
         }, delay);
       }
@@ -255,7 +255,7 @@ export default function CtaAustraliaBloom() {
       const intEdgeStart = tasEdgeStart + TAS.length + 1;
       for (let i = 0; i < INT_EDGES.length; i++) {
         tl.to(`#au-e${intEdgeStart + i}`, {
-          opacity: 0.05 + srand((i + 100) * 23) * 0.06,
+          opacity: 0.12 + srand((i + 100) * 23) * 0.1,
           duration: 0.4,
         }, 1.5 + i * 0.06);
       }
@@ -272,7 +272,7 @@ export default function CtaAustraliaBloom() {
         if (bNodeSels.length > 0) {
           breathTweens.current.push(
             gsap.to(bNodeSels, {
-              attr: { r: '+=4' }, opacity: '+=0.08',
+              attr: { r: '+=5' }, opacity: '+=0.1',
               duration: 2.6, repeat: -1, yoyo: true, ease: 'sine.inOut',
               stagger: { each: 0.08, from: 'random' },
             }),
@@ -281,7 +281,7 @@ export default function CtaAustraliaBloom() {
         if (bEdgeSels.length > 0) {
           breathTweens.current.push(
             gsap.to(bEdgeSels, {
-              opacity: '+=0.06',
+              opacity: '+=0.08',
               duration: 3, repeat: -1, yoyo: true, ease: 'sine.inOut',
               stagger: { each: 0.1, from: 'random' },
             }),

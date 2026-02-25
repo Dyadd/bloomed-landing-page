@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import HeroBloom from './HeroBloom';
@@ -50,25 +50,6 @@ export default function Hero({ onOpenForm }: Props) {
     return () => ctx.revert();
   }, []);
 
-  const handleBtnMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const btn = e.currentTarget;
-    const r = btn.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width;
-    const y = (e.clientY - r.top) / r.height;
-    btn.style.setProperty('--rx', `${(y - 0.5) * -7}deg`);
-    btn.style.setProperty('--ry', `${(x - 0.5) * 7}deg`);
-    btn.style.setProperty('--mx', `${x * 100}%`);
-    btn.style.setProperty('--my', `${y * 100}%`);
-  }, []);
-
-  const handleBtnLeave = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const btn = e.currentTarget;
-    btn.style.setProperty('--rx', '0deg');
-    btn.style.setProperty('--ry', '0deg');
-    btn.style.setProperty('--mx', '50%');
-    btn.style.setProperty('--my', '50%');
-  }, []);
-
   return (
     <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-24 px-8 lg:px-16 text-center">
       {/* Accent radial glow from the top */}
@@ -107,12 +88,10 @@ export default function Hero({ onOpenForm }: Props) {
         <div className="hero-cta flex justify-center">
           <button
             onClick={onOpenForm}
-            onMouseMove={handleBtnMove}
-            onMouseLeave={handleBtnLeave}
-            className="btn-primary text-body px-7 py-[14px]"
+            className="btn-primary text-body px-7 py-[15px]"
             style={{ backgroundColor: '#1a32e0' }}
           >
-            Get early access
+            Get Early Access
           </button>
         </div>
       </div>

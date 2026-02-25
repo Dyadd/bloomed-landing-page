@@ -42,8 +42,8 @@ export default function CtaSection({ onOpenForm }: Props) {
           and help shape what we build.
         </p>
 
-        <button onClick={onOpenForm} className="btn-primary text-body px-7 py-[14px]" style={{ backgroundColor: '#1a32e0' }}>
-          Get early access
+        <button onClick={onOpenForm} className="btn-primary text-body px-7 py-[15px]" style={{ backgroundColor: '#1a32e0' }}>
+          Get Early Access
         </button>
 
       </div>

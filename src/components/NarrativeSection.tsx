@@ -113,7 +113,7 @@ export default function NarrativeSection() {
           <p className="text-body-lg text-white/60 max-w-xl mx-auto">
             University teaching is one-size-fits-all.
             <br />
-            Bloomed is <span style={{ color: '#93c5fd' }}>your personalised learning engine</span> - mapping what you know, structuring what you need to learn, and making sure it sticks.
+            Bloomed is <span style={{ color: '#93c5fd', fontWeight: 'bold' }}>your personalised learning engine</span> - mapping what you know, structuring what you need to learn, and making sure it sticks.
           </p>
         </div>
 
