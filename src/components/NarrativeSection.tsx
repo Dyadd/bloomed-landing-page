@@ -107,13 +107,13 @@ export default function NarrativeSection() {
       <div className="bg-[#0f1a3e] rounded-[3rem] lg:rounded-[4rem] mx-4 lg:mx-10 py-16 lg:py-20 text-white">
         {/* Section header — centered, large, with accent serif on brand name */}
         <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-32 lg:pt-44 pb-2 text-center">
-          <h2 className="text-h2 lg:text-h1 font-bold text-white mb-6">
+          <h2 className="text-h1 lg:text-display font-bold text-white mb-10">
             How <span className="font-accent italic text-blue-300">Bloomed</span> Works
           </h2>
           <p className="text-body-lg text-white/60 max-w-xl mx-auto">
             University teaching is one-size-fits-all.
             <br />
-            Bloomed is <span style={{ color: '#93c5fd', fontWeight: 'bold' }}>your personalised learning engine</span> - mapping what you know, structuring what you need to learn, and making sure it sticks.
+            Bloomed is <span className="font-accent italic" style={{ color: '#93c5fd', fontWeight: 'bold' }}>your personalised learning engine</span> - mapping what you know, structuring what you need to learn, and making sure it sticks.
           </p>
         </div>
 

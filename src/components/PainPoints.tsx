@@ -18,6 +18,8 @@ function srand(seed: number): number {
   return x - Math.floor(x);
 }
 
+const CARD_SYMBOLS = ['✦', '✕', '!!', '✦', '✕', '!!'];
+
 const CARD_TRANSFORMS = PAIN_POINTS.map((_, i) => ({
   rotate: (srand(i * 7 + 3) - 0.5) * 18,
   offsetX: 0,
@@ -109,7 +111,7 @@ export default function PainPoints() {
           return (
             <div
               key={i}
-              className="pain-item relative w-56 min-w-[14rem] lg:w-60 lg:min-w-[15rem] flex-shrink-0 p-6 rounded-2xl border border-primary/[0.06] bg-surface/60 cursor-default"
+              className="pain-item relative w-56 min-w-[14rem] lg:w-60 lg:min-w-[15rem] flex-shrink-0 px-6 py-6 rounded-2xl border border-primary/[0.06] bg-surface/60 cursor-default"
               style={{
                 transform: `rotate(${rotate}deg) translate(${offsetX}px, ${offsetY}px)`,
                 willChange: 'transform',
@@ -117,8 +119,8 @@ export default function PainPoints() {
               onMouseEnter={handleEnter}
               onMouseLeave={(e) => handleLeave(e, i)}
             >
-              <span className="block w-2 h-2 rounded-full bg-danger mb-3" />
-              <p className="text-body font-medium text-primary leading-snug">
+              <span className="block text-danger text-xl font-bold mb-3 leading-none text-center">{CARD_SYMBOLS[i]}</span>
+              <p className="text-body font-medium text-primary leading-snug text-center">
                 {point}
               </p>
             </div>
