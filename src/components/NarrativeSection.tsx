@@ -42,7 +42,7 @@ const PHASES: {
   {
     phase: 'learning',
     number: '02',
-    label: 'Targeted Learning Plan',
+    label: 'Targeted Plan',
     headline: 'Study smarter, not harder.',
     body: "Instead of working through a textbook and hoping it's relevant, Bloomed structures your study around what you actually need - mock questions, curated notes, and purpose-built flashcards delivered in the right order, at the right time.",
     callout: 'Smarter study, not more study.',
@@ -104,11 +104,11 @@ export default function NarrativeSection() {
 
   return (
     <section className="relative">
-      <div className="bg-[#0f1a3e] rounded-[3rem] lg:rounded-[4rem] mx-4 lg:mx-10 py-16 lg:py-20 text-white">
+      <div className="bg-[#0f1a3e] rounded-none lg:rounded-[4rem] mx-0 lg:mx-10 py-16 lg:py-20 text-white">
         {/* Section header — centered, large, with accent serif on brand name */}
-        <div className="max-w-[1400px] mx-auto px-8 lg:px-16 pt-32 lg:pt-44 pb-2 text-center">
+        <div className="max-w-[1400px] mx-auto px-6 sm:px-8 lg:px-16 pt-6 sm:pt-32 lg:pt-44 pb-16 sm:pb-2 text-center">
           <h2 className="text-h1 lg:text-display font-bold text-white mb-10">
-            How <span className="font-accent italic text-blue-300">Bloomed</span> Works
+            How does <span className="font-accent italic text-blue-300">Bloomed</span> work?
           </h2>
           <p className="text-body-lg text-white/60 max-w-xl mx-auto">
             University teaching is one-size-fits-all.
@@ -125,11 +125,11 @@ export default function NarrativeSection() {
               <div
                 key={p.phase}
                 ref={el => { stepRefs.current[i] = el; }}
-                className="relative min-h-screen flex items-center px-8 lg:px-16 py-24"
+                className="relative min-h-[60vh] lg:min-h-screen flex items-center px-6 sm:px-8 lg:px-16 py-11 lg:py-24"
               >
-                <div className="step-content relative max-w-lg pt-0">
+                <div className="step-content relative max-w-lg pt-6 lg:pt-0">
                   {/* Large faded background number */}
-                  <span className="absolute -top-[8rem] lg:-top-[10rem] left-0 text-[8rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.3] select-none pointer-events-none">
+                  <span className="absolute -top-[5rem] lg:-top-[10rem] left-0 text-[5rem] lg:text-[10rem] font-accent italic leading-none text-white/[0.3] select-none pointer-events-none">
                     {p.number}
                   </span>
                   {/* Headline */}

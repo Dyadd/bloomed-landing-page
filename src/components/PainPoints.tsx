@@ -34,6 +34,8 @@ CARD_TRANSFORMS[2].rotate = 10;
 const REVEAL_ORDER = [2, 5, 0, 4, 1, 3];
 
 export default function PainPoints() {
+  const isDesktop = () => window.matchMedia('(min-width: 1024px)').matches;
+
   useEffect(() => {
     const title = document.querySelector('.pain-title');
     if (title) {
@@ -43,17 +45,21 @@ export default function PainPoints() {
       });
     }
 
+    const desktop = isDesktop();
     const items = document.querySelectorAll('.pain-item');
     items.forEach((item, i) => {
       const { rotate, offsetX, offsetY } = CARD_TRANSFORMS[i];
+      const r = desktop ? rotate : 0;
+      const ox = desktop ? offsetX : 0;
+      const oy = desktop ? offsetY : 0;
       gsap.fromTo(
         item,
-        { opacity: 0, x: offsetX, y: offsetY + 40, rotate, scale: 0.95 },
+        { opacity: 0, x: ox, y: oy + 40, rotate: r, scale: 0.95 },
         {
           opacity: 1,
-          x: offsetX,
-          y: offsetY,
-          rotate,
+          x: ox,
+          y: oy,
+          rotate: r,
           scale: 1,
           duration: 0.7,
           ease: 'power3.out',
@@ -69,6 +75,7 @@ export default function PainPoints() {
   }, []);
 
   const handleEnter = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    if (!window.matchMedia('(min-width: 1024px)').matches) return;
     gsap.to(e.currentTarget, {
       opacity: 1,
       rotate: 0,
@@ -84,6 +91,7 @@ export default function PainPoints() {
   }, []);
 
   const handleLeave = useCallback((e: React.MouseEvent<HTMLDivElement>, i: number) => {
+    if (!window.matchMedia('(min-width: 1024px)').matches) return;
     const { rotate, offsetX, offsetY } = CARD_TRANSFORMS[i];
     gsap.to(e.currentTarget, {
       opacity: 1,
@@ -100,27 +108,30 @@ export default function PainPoints() {
   }, []);
 
   return (
-    <section className="relative pt-24 pb-40 lg:pb-56 px-8 lg:px-16 overflow-hidden">
-      <h2 className="pain-title text-h2 lg:text-h1 font-bold text-primary mb-14 text-center">
-        Most Students Study <span className="font-accent italic gradient-text">Blind</span>
+    <section className="relative pt-6 pb-20 lg:pt-24 lg:pb-56 px-6 lg:px-16 overflow-hidden">
+      <h2 className="pain-title text-h1 lg:text-h1 font-bold text-primary mb-8 lg:mb-14 text-center leading-[1.1]">
+        Most Students<br className="lg:hidden" /> Study <span className="font-accent italic gradient-text">Blind</span>
       </h2>
 
-      <div className="pain-row flex flex-nowrap justify-center items-center gap-5 lg:gap-7">
+      <div className="pain-row flex flex-col gap-4 lg:flex-row lg:flex-nowrap lg:justify-center lg:items-center lg:gap-7">
         {PAIN_POINTS.map((point, i) => {
           const { rotate, offsetX, offsetY } = CARD_TRANSFORMS[i];
+          const hiddenOnMobile = i >= 3;
           return (
             <div
               key={i}
-              className="pain-item relative w-56 min-w-[14rem] lg:w-60 lg:min-w-[15rem] flex-shrink-0 px-6 py-6 rounded-2xl border border-primary/[0.06] bg-surface/60 cursor-default"
+              className={`pain-item relative px-6 py-9 lg:px-6 lg:py-6 lg:w-60 lg:min-w-[15rem] lg:flex-shrink-0 rounded-2xl border border-primary/[0.06] bg-surface/60 cursor-default ${hiddenOnMobile ? 'hidden lg:block' : ''}`}
               style={{
-                transform: `rotate(${rotate}deg) translate(${offsetX}px, ${offsetY}px)`,
+                transform: isDesktop()
+                  ? `rotate(${rotate}deg) translate(${offsetX}px, ${offsetY}px)`
+                  : undefined,
                 willChange: 'transform',
               }}
               onMouseEnter={handleEnter}
               onMouseLeave={(e) => handleLeave(e, i)}
             >
-              <span className="block text-danger text-xl font-bold mb-3 leading-none text-center">{CARD_SYMBOLS[i]}</span>
-              <p className="text-body font-medium text-primary leading-snug text-center">
+              <span className="block text-danger text-3xl lg:text-xl font-bold mb-3 lg:mb-3 leading-none text-center">{CARD_SYMBOLS[i]}</span>
+              <p className="text-body-lg lg:text-body font-medium text-primary leading-snug text-center">
                 {point}
               </p>
             </div>

@@ -4,24 +4,17 @@ interface Props {
 
 export default function CtaSection({ onOpenForm }: Props) {
   return (
-    <section className="relative pt-36 lg:pt-44 pb-36 lg:pb-44 px-8 lg:px-16 overflow-hidden">
+    <section className="relative pt-24 lg:pt-44 pb-24 lg:pb-44 px-6 sm:px-8 lg:px-16 overflow-hidden">
       {/* Accent glow */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div
-          className="w-[700px] h-[450px] opacity-[0.06]"
+          className="w-[85vw] max-w-[700px] h-[55vw] max-h-[450px] opacity-[0.06]"
           style={{ background: 'radial-gradient(ellipse, var(--color-accent), transparent 68%)' }}
         />
       </div>
 
       <div className="relative max-w-3xl mx-auto text-center">
-        <div className="inline-flex mb-8">
-          <span className="phase-label text-caption">
-            <span className="dot" />
-            Early access
-          </span>
-        </div>
-
-        <h2 className="text-h1 lg:text-display font-bold text-primary mb-6">
+        <h2 className="text-[2.5rem] lg:text-display font-bold text-primary mb-6 leading-[1.1]">
           Built for{' '}
           <span className="gradient-text">Australian</span>
           <br />

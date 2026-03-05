@@ -27,14 +27,15 @@ export default function Nav({ onOpenForm }: Props) {
       </a>
 
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* FAQ — hidden on mobile, visible on sm+ */}
-        <button
-          onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
-          className="btn-ghost text-body-sm hidden sm:inline-flex py-[13px]"
-          style={{ background: 'rgba(26, 50, 224, 0.10)', borderColor: 'rgba(26, 50, 224, 0.25)' }}
-        >
-          FAQ
-        </button>
+        <div className="hidden lg:block">
+          <button
+            onClick={() => document.getElementById('faq')?.scrollIntoView({ behavior: 'smooth' })}
+            className="btn-ghost text-body-sm py-[13px]"
+            style={{ background: 'rgba(26, 50, 224, 0.10)', borderColor: 'rgba(26, 50, 224, 0.25)' }}
+          >
+            FAQ
+          </button>
+        </div>
 
         <button onClick={onOpenForm} className="btn-primary text-body-sm" style={{ backgroundColor: '#1a32e0' }}>
           <span className="hidden sm:inline">Get Early Access</span>

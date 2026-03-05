@@ -195,7 +195,7 @@ export default function LeadForm({ isOpen, onClose }: Props) {
               {hasIdentity && (
                 <FadeIn>
                   <label className="block text-caption font-medium text-muted mb-2">I am a...</label>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                     <ChoiceButton
                       label="Medical Student"
                       selected={role === 'student'}
