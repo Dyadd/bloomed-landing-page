@@ -1,60 +1,53 @@
-import { useEffect } from 'react';
-import { gsap } from 'gsap';
+import { useEffect, useState } from 'react';
+import Button from './Button';
+import HeroSession from './HeroSession';
+import Icon from './Icon';
+import { SIGN_UP_URL } from '../lib/links';
 
-interface Props {
-  onOpenForm: () => void;
+const STACKED = '(max-width: 859px)';
+
+function useStacked() {
+  const [stacked, setStacked] = useState(() => typeof window !== 'undefined' && window.matchMedia(STACKED).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(STACKED);
+    const onChange = () => setStacked(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return stacked;
 }
 
-export default function Hero({ onOpenForm }: Props) {
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.hero-headline', { opacity: 0, y: 50, duration: 1,   ease: 'power3.out', delay: 0.15 });
-      gsap.from('.hero-sub',      { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out', delay: 0.35 });
-      gsap.from('.hero-sub2',     { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.50 });
-      gsap.from('.hero-cta',      { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 0.65 });
-    });
-    return () => ctx.revert();
-  }, []);
-
+export default function Hero() {
+  const stacked = useStacked();
   return (
-    <section className="relative min-h-screen flex flex-col items-center justify-center pt-24 pb-20 px-8 lg:px-16 overflow-hidden text-center">
-      {/* Subtle dot-grid background */}
-      <div className="absolute inset-0 dot-grid opacity-60 pointer-events-none" />
-
-      {/* Accent radial glow from the top */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[900px] h-[600px] pointer-events-none opacity-[0.07]"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%, var(--color-accent), transparent 65%)' }}
-      />
-
-      <div className="relative max-w-3xl">
-        {/* Headline */}
-        <h1 className="hero-headline font-bold leading-[1.08] mb-6 tracking-tight">
-          <span className="text-2xl lg:text-4xl text-primary">Diagnose your weaknesses.</span>
-          <br />
-          <span className="font-accent gradient-text text-6xl lg:text-8xl">Master Medicine.</span>
-        </h1>
-
-        {/* Sub-heading */}
-        <p className="hero-sub text-lg lg:text-xl text-muted leading-relaxed max-w-2xl mx-auto mb-4">
-          Answer questions. We spot the gaps. You get exactly what you need to fill them.
+    <section className="hero">
+      <div className="hero-copy">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div className="hero-eyebrow">For Australian medical students and clinicians</div>
+          <h1 className="hero-title">
+            Your Path to
+            <br />
+            <span className="hero-title-mark">Medical Mastery</span>
+          </h1>
+        </div>
+        <p className="hero-lede" style={{ margin: 0 }}>
+          Bloomed builds a live map of your medical knowledge that always serves your highest-yield question next.
+          Designed for study in the Australian medical context.
         </p>
-
-        {/* Sub-heading 2 — styled as a pill tag matching the phase-label pattern */}
-        <div className="hero-sub2 flex justify-center mb-10">
-          <span className="phase-label text-[12px]">
-            <span className="dot" />
-            Built for Australian medical students and junior doctors
+        <div className="hero-actions">
+          <Button size="lg" href={SIGN_UP_URL}>Get started</Button>
+          <span className="hero-free">
+            <Icon name="bolt" size={15} />
+            Free while in Early Access
           </span>
         </div>
-
-        {/* CTA */}
-        <div className="hero-cta flex justify-center">
-          <button onClick={onOpenForm} className="btn-primary text-base px-7 py-[14px]">
-            Get early access
-          </button>
+        <div className="hero-prompt">
+          <Icon name="arrow-right" size={16} color="var(--lime-deep)" />
+          {stacked ? 'Answer the question below to see how it works.' : 'Answer the question on the right to see how it works.'}
         </div>
       </div>
+
+      <HeroSession />
     </section>
   );
 }
