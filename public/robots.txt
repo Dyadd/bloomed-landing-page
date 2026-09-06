@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://bloomed.study/sitemap.xml
+Sitemap: https://studywithbloomed.com/sitemap.xml

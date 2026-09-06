@@ -1,92 +1,53 @@
-import { useEffect, useRef } from 'react';
-import { gsap } from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import HeroBloom from './HeroBloom';
+import { useEffect, useState } from 'react';
+import Button from './Button';
+import HeroSession from './HeroSession';
+import Icon from './Icon';
+import { SIGN_UP_URL } from '../lib/links';
 
-gsap.registerPlugin(ScrollTrigger);
+const STACKED = '(max-width: 859px)';
 
-interface Props {
-  onOpenForm: () => void;
+function useStacked() {
+  const [stacked, setStacked] = useState(() => typeof window !== 'undefined' && window.matchMedia(STACKED).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(STACKED);
+    const onChange = () => setStacked(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+  return stacked;
 }
 
-export default function Hero({ onOpenForm }: Props) {
-  const sectionRef = useRef<HTMLElement>(null);
-  const bloomRef = useRef<HTMLDivElement>(null);
-  const textRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      gsap.from('.hero-headline', { opacity: 0, y: 50, duration: 1,   ease: 'power3.out', delay: 1.15 });
-      gsap.from('.hero-sub',      { opacity: 0, y: 30, duration: 0.9, ease: 'power3.out', delay: 1.35 });
-      gsap.from('.hero-cta',      { opacity: 0, y: 20, duration: 0.8, ease: 'power3.out', delay: 1.55 });
-
-      if (bloomRef.current) {
-        gsap.to(bloomRef.current, {
-          y: -500,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        });
-      }
-
-      if (textRef.current) {
-        gsap.to(textRef.current, {
-          y: -60,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top top',
-            end: 'bottom top',
-            scrub: true,
-          },
-        });
-      }
-    });
-    return () => ctx.revert();
-  }, []);
-
+export default function Hero() {
+  const stacked = useStacked();
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex flex-col items-center justify-center pt-20 pb-0 lg:pt-24 lg:pb-24 px-6 sm:px-8 lg:px-16 text-center">
-      {/* Accent radial glow from the top */}
-      <div
-        className="absolute top-0 left-1/2 -translate-x-1/2 w-[90vw] max-w-[900px] h-[60vw] max-h-[600px] pointer-events-none opacity-[0.07]"
-        style={{ background: 'radial-gradient(ellipse at 50% 0%, var(--color-accent), transparent 65%)' }}
-      />
-
-      {/* Bloom node animation — behind text */}
-      <div ref={bloomRef} className="absolute inset-x-0 top-[10%] bottom-[5%] flex items-center justify-center pointer-events-none">
-        <div className="w-full h-full opacity-50">
-          <HeroBloom />
+    <section className="hero">
+      <div className="hero-copy">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 18 }}>
+          <div className="hero-eyebrow">For Australian medical students and clinicians</div>
+          <h1 className="hero-title">
+            Your Path to
+            <br />
+            <span className="hero-title-mark">Medical Mastery</span>
+          </h1>
         </div>
-      </div>
-
-      <div ref={textRef} className="relative max-w-4xl">
-        <h1 className="hero-headline text-[3rem] lg:text-display font-semibold leading-[1.0] lg:leading-[1.08] mb-8 lg:mb-10" style={{ color: '#000000' }}>
-          <span className="sm:whitespace-nowrap"><span className="font-accent italic">Diagnose</span> Your Weaknesses.</span>
-          <br />
-          <span className="whitespace-nowrap"><span className="font-accent italic">Master</span> Medicine.</span>
-        </h1>
-
-        <p className="hero-sub text-body-lg max-w-2xl mx-auto mb-12 lg:mb-14" style={{ color: '#000000' }}>
-          Answer questions. We spot the gaps.
-          <br />
-          You get exactly what you need to fill them.
+        <p className="hero-lede" style={{ margin: 0 }}>
+          Bloomed builds a live map of your medical knowledge that always serves your highest-yield question next.
+          Designed for study in the Australian medical context.
         </p>
-
-        <div className="hero-cta flex justify-center">
-          <button
-            onClick={onOpenForm}
-            className="btn-primary text-body px-7 py-[15px]"
-            style={{ backgroundColor: '#1a32e0' }}
-          >
-            Get Early Access
-          </button>
+        <div className="hero-actions">
+          <Button size="lg" href={SIGN_UP_URL}>Get started</Button>
+          <span className="hero-free">
+            <Icon name="bolt" size={15} />
+            Free while in Early Access
+          </span>
+        </div>
+        <div className="hero-prompt">
+          <Icon name="arrow-right" size={16} color="var(--lime-deep)" />
+          {stacked ? 'Answer the question below to see how it works.' : 'Answer the question on the right to see how it works.'}
         </div>
       </div>
+
+      <HeroSession />
     </section>
   );
 }
