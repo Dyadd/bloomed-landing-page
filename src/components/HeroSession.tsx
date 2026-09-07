@@ -36,15 +36,15 @@ const ROUTE_HOLD_MS = 1000;
 /* after the last question's growth card the loop returns to the first question */
 const LOOP_HOLD_MS = 1600;
 /* the tutor beat: a typing pause before the follow-up appears, time to read it,
-   the ghost's typing speed per character, a beat before it presses send, the
-   hold on the sent reply before the map, and how long a visitor who has taken
-   over the keyboard gets before the ghost finishes for them */
+   the ghost's typing speed per character, a beat before it presses send, and
+   the hold on the sent reply before the map. The chat is display only here:
+   a visitor who clicked into the field used to stall the loop, so the field
+   and send button are inert and the ghost always types */
 const TUTOR_THINK_MS = 700;
 const TUTOR_READ_MS = 1500;
 const TYPE_MS = 42;
 const TUTOR_SEND_MS = 420;
 const TUTOR_HOLD_MS = 1300;
-const TUTOR_IDLE_MS = 15000;
 
 const RISE = 'cubic-bezier(0.2, 0.8, 0.3, 1)';
 const TRAVEL = 'cubic-bezier(0.24, 0.62, 0.32, 1)';
@@ -122,10 +122,9 @@ export default function HeroSession({ pace = 1, autoRoute = true, autoDemo = tru
   const tm = useRef<number[]>([]);
   const dm = useRef<number[]>([]);
   const demoT = useRef<number | undefined>(undefined);
-  /* the ghost's typing in the tutor beat has its own list too, so a visitor's first
-     keystroke can stop it without touching the session's own beats */
+  /* the ghost's typing in the tutor beat keeps its own list so send can drop the
+     rest of it without touching the session's own beats */
   const tt = useRef<number[]>([]);
-  const userTyping = useRef(false);
 
   const go = (patch: Partial<State>) => setS((prev) => ({ ...prev, ...patch }));
   const at = (ms: number, fn: () => void) => { tm.current.push(window.setTimeout(fn, ms * propsRef.current.pace)); };
@@ -157,7 +156,6 @@ export default function HeroSession({ pace = 1, autoRoute = true, autoDemo = tru
     go({ picked: i, phase: 'revealed', to: right ? q.to : Math.max(10, q.from - 8) });
     at(1800, () => {
       if (q.tutor) {
-        userTyping.current = false;
         go({ phase: 'tutor', tutorStep: 0, typed: '', reply: '' });
         runTutor(q.tutor);
         return;
@@ -201,23 +199,6 @@ export default function HeroSession({ pace = 1, autoRoute = true, autoDemo = tru
     clearTutorTimers();
     go({ tutorStep: 2, reply: text, typed: '' });
     at(TUTOR_HOLD_MS, () => routeOn(QUESTIONS[st.mi]));
-  };
-
-  /* a visitor at the keyboard: the ghost stops on the first focus or keystroke,
-     the follow-up shows at once if it hasn't yet, and send is theirs to press */
-  const takeOver = () => {
-    const st = sRef.current;
-    if (st.phase !== 'tutor' || st.tutorStep === 2 || userTyping.current) return;
-    userTyping.current = true;
-    clearTutorTimers();
-    if (st.tutorStep === 0) go({ tutorStep: 1 });
-    const t = QUESTIONS[st.mi].tutor;
-    tutorAt(TUTOR_IDLE_MS, () => finishTutor(sRef.current.typed.trim() || (t ? t.reply : '')));
-  };
-
-  const sendReply = () => {
-    const text = sRef.current.typed.trim();
-    if (text) finishTutor(text);
   };
 
   const runDemo = () => {
@@ -333,7 +314,6 @@ export default function HeroSession({ pace = 1, autoRoute = true, autoDemo = tru
     const tKey = showTutor ? 'on' : phase === 'revealed' ? 'pre' : 'off';
     const tFrom = showTutor ? gMap.pre : phase === 'revealed' ? gMap.off : gMap.on;
     play(tutorEl.current, 'tutor', tKey, tFrom, gMap[tKey], showTutor ? 460 : 520, TRAVEL);
-    if (tutorEl.current) tutorEl.current.style.pointerEvents = showTutor ? 'auto' : 'none';
 
     play(gridEl.current, 'grid', String(gridOn), { opacity: gridOn ? 0 : 1 }, { opacity: gridOn ? 1 : 0 }, 420, RISE);
     if (gridEl.current) gridEl.current.style.transform = `scale(${k})`;
@@ -472,23 +452,14 @@ export default function HeroSession({ pace = 1, autoRoute = true, autoDemo = tru
               </div>
             </div>
           )}
-          <form className="hs-chat-composer" onSubmit={(e) => { e.preventDefault(); sendReply(); }}>
-            <input
-              className="hs-chat-input"
-              type="text"
-              value={s.typed}
-              placeholder={s.tutorStep === 2 ? 'Sent' : 'Reply to your tutor…'}
-              aria-label="Reply to your tutor"
-              autoComplete="off"
-              disabled={s.tutorStep === 2}
-              tabIndex={phase === 'tutor' ? 0 : -1}
-              onFocus={takeOver}
-              onChange={(e) => { takeOver(); go({ typed: e.target.value }); }}
-            />
-            <button type="submit" className="hs-chat-send" aria-label="Send reply" disabled={s.tutorStep === 2} tabIndex={phase === 'tutor' ? 0 : -1}>
+          {/* display only: the card keeps pointer-events none, the field is read-only
+              and nothing here can take focus, so the loop never stalls on a click */}
+          <div className="hs-chat-composer" aria-hidden="true">
+            <input className="hs-chat-input" type="text" value={s.typed} placeholder={s.tutorStep === 2 ? 'Sent' : 'Reply to your tutor…'} readOnly tabIndex={-1} />
+            <span className="hs-chat-send" style={s.tutorStep === 2 ? { background: 'var(--ink-faint)' } : undefined}>
               <Icon name="arrow-right" size={14} color="var(--on-dark)" />
-            </button>
-          </form>
+            </span>
+          </div>
         </div>
 
         {/* the map */}

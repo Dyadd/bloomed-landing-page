@@ -46,12 +46,12 @@ pre-empts the ghost on that question.
   the still version below.
 - A question can carry a `tutor` beat (the second one does). After that question the growth
   card is skipped and a tutor chat card takes its place: the tutor's follow-up appears after a
-  typing pause (phrased for a right or a wrong answer), the ghost types the reply into a real
-  input a character at a time and sends it, the reply shows as a bubble, and the session goes
-  on to the map. A visitor who focuses or types in the input stops the ghost and sends when they
-  like; if they stall for `TUTOR_IDLE_MS` the ghost finishes for them. Its timers live in their
-  own list (`tt`) for the same reason the ghost cursor's do. The chat's classes (`hs-chat-*`)
-  are shared with the still storyboard.
+  typing pause (phrased for a right or a wrong answer), the ghost types the reply into the field
+  a character at a time and sends it, the reply shows as a bubble, and the session goes on to
+  the map. The card is display only (pointer-events none, read-only field, nothing focusable):
+  an earlier version let a visitor take over the keyboard, and a click into the field stalled
+  the loop. Its timers live in their own list (`tt`). The chat's classes (`hs-chat-*`) are
+  shared with the still storyboard, where the composer is live.
 
 ## The still hero (`src/components/HeroStill.tsx`)
 
