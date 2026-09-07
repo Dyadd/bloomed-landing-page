@@ -1,7 +1,13 @@
 {
-    "name": "bloomed-landing-page",
-    "compatibility_date": "2026-02-18",
-    "assets": {
-      "directory": "./dist"
-    }
-  }
+  "name": "bloomed-landing-page",
+  // The Cloudflare account holding the `studywithbloomed.com` zone (the same one the app
+  // Worker at app.studywithbloomed.com deploys to). Pinned so a deploy from a login that
+  // cannot see this account fails loudly instead of landing on a stray workers.dev URL.
+  "account_id": "50e842516b6b95c17e1a217afa4a8304",
+  "compatibility_date": "2026-02-18",
+  "assets": {
+    "directory": "./dist"
+  },
+  // Attach the apex as a custom domain; wrangler writes the DNS record itself.
+  "routes": [{ "pattern": "studywithbloomed.com", "custom_domain": true }]
+}
