@@ -22,9 +22,9 @@ export default function HowItWorks() {
           <div className="how-glyph">
             <Sparkline points={SPARK} maxHeight={30} />
           </div>
-          <div className="how-card-title">We watch how you got it wrong</div>
+          <div className="how-card-title">We analyse how you answer questions</div>
           <div className="how-card-body">
-            Getting an answer wrong tells us which part of your reasoning slipped, so we understand what you need to correct it.
+            Every answer, right or wrong, tells us which part of your reasoning held and which part slipped.
           </div>
         </div>
         <div className="how-card">
@@ -36,10 +36,10 @@ export default function HowItWorks() {
             <Icon name="arrow-right" size={14} color="var(--ink-faint)" />
             <span className="how-cell" style={{ background: '#d3fa70' }} />
           </div>
-          <div className="how-card-title">Your mastery map redraws itself</div>
+          <div className="how-card-title">We track your mastery</div>
           <div className="how-card-body">
-            Thousands of concepts, each carrying its own state - strong, shaky, fading, or never seen. As you answer, we
-            differentiate your weak spots from where your understanding is solid.
+            Every concept carries a score - strong, shaky, fading, or never seen - and it moves with each answer, so
+            your weak spots stand out from what you already know.
           </div>
         </div>
         <div className="how-card">
@@ -49,10 +49,10 @@ export default function HowItWorks() {
             <span className="how-cell" style={{ background: 'var(--dark-fill)' }} />
             <span className="how-cell" style={{ background: 'var(--dark-fill)' }} />
           </div>
-          <div className="how-card-title">You get the questions you need next</div>
+          <div className="how-card-title">You get the questions you need</div>
           <div className="how-card-body">
             No filters to configure, no decks to build. Sit down, press start, and you're working on exactly the things
-            holding you back.
+            holding you back before your exam.
           </div>
         </div>
       </div>

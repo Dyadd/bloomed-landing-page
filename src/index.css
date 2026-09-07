@@ -122,8 +122,6 @@ a:hover { color: var(--ink); }
 .hero-title-mark { display: inline-block; max-width: 100%; line-height: 1.06; background: var(--lime); padding: 2px 8px; border-radius: 5px; }
 .hero-lede { font-size: 17px; line-height: 1.65; color: var(--ink-body); max-width: 46ch; }
 .hero-actions { display: flex; gap: 16px; align-items: center; padding-top: 6px; flex-wrap: wrap; }
-.hero-free { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: var(--ink-muted); }
-.hero-prompt { display: flex; align-items: center; gap: 9px; padding-top: 10px; font-size: 13.5px; color: var(--ink-body-strong); }
 
 /* ── Trusted-by band ────────────────────────────────────────────────────── */
 .trusted {
@@ -190,6 +188,77 @@ a:hover { color: var(--ink); }
 .hs-opt[data-asking="1"]:hover,
 .hs-opt[data-pressed="1"] { background: var(--lime-soft); border-color: var(--ink); }
 
+/* The still storyboard that stands in for the session where motion is off:
+   a spine down the left, question cards on the numbered nodes, and the beats
+   between them on the small dots. */
+.hs-still { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.hs-seq { position: relative; list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.hs-seq::before { content: ''; position: absolute; left: 16px; top: 14px; bottom: 14px; width: 1px; background: var(--track-line); }
+.hs-seq-item { position: relative; display: grid; grid-template-columns: 32px minmax(0, 1fr); column-gap: 12px; align-items: start; }
+.hs-seq-node {
+  display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--ink); color: var(--on-dark); font-size: 11.5px; font-weight: 500; letter-spacing: 0.02em; font-variant-numeric: tabular-nums;
+  margin-top: 12px; position: relative; z-index: 1;
+}
+.hs-seq-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--lime); border: 1px solid var(--ink); margin: 16px 0 0 12px; position: relative; z-index: 1; }
+.hs-seq-q {
+  display: flex; flex-direction: column; gap: 6px; padding: 12px 14px;
+  background: var(--paper-white); border: 0.5px solid var(--line); border-radius: var(--radius-panel); box-shadow: var(--shadow-rest);
+}
+.hs-seq-q-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.hs-seq-pill { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; padding: 3px 8px; border-radius: 6px; border: 0.5px solid var(--line); white-space: nowrap; }
+.hs-seq-stem { font-size: 13.5px; line-height: 1.5; color: var(--ink-body-strong); display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
+.hs-seq-beat {
+  display: flex; flex-direction: column; gap: 9px; padding: 12px 14px; max-width: 88%; box-sizing: border-box;
+  border-radius: var(--radius-panel);
+}
+.hs-seq-mark { font-family: var(--font-display); font-size: 18px; line-height: 1.25; letter-spacing: -0.01em; color: var(--ink); }
+.hs-seq-beat-label { font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--lime-deep); font-weight: 500; }
+/* ── The chat surface, shared by the animated session's tutor card and the still
+   storyboard's chat and weak-spot cards: a soft lime wash with a faint dot grid,
+   so it reads as a different surface from the question cards around it ──── */
+.hs-chat, .hs-seq-beat {
+  background:
+    radial-gradient(circle at 1px 1px, rgba(74, 104, 26, 0.10) 1px, transparent 1.4px) 0 0 / 14px 14px,
+    linear-gradient(160deg, var(--paper-cream) 0%, var(--lime-soft) 100%);
+  border: 0.5px solid var(--lime-underline);
+}
+.hs-chat { display: flex; flex-direction: column; gap: 10px; padding: 12px 14px 12px; border-radius: var(--radius-panel); box-shadow: var(--shadow-rest); }
+.hs-chat-typing { display: flex; gap: 4px; align-items: center; padding: 14px 16px; }
+.hs-chat-typing span { width: 6px; height: 6px; border-radius: 50%; background: var(--ink-faint); }
+.hs-chat-input:disabled { color: var(--ink-faint); }
+.hs-chat-send:disabled { background: var(--ink-faint); cursor: default; }
+.hs-chat-msg { display: flex; gap: 9px; align-items: flex-end; max-width: 88%; }
+.hs-chat-msg-you { align-self: flex-end; justify-content: flex-end; max-width: 70%; }
+.hs-chat-msg-you .hs-chat-msg-body { align-items: flex-end; }
+.hs-chat-msg-body { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.hs-chat-avatar { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 26px; height: 26px; border-radius: 50%; background: var(--lime); border: 1px solid var(--ink); margin-bottom: 2px; }
+.hs-chat-who { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); padding: 0 4px; }
+.hs-chat-online { width: 6px; height: 6px; border-radius: 50%; background: var(--lime); border: 1px solid var(--lime-deep); }
+.hs-chat-bubble { position: relative; font-size: 13.5px; line-height: 1.5; color: var(--on-dark); background: var(--dark-surface); border: 0.5px solid var(--dark-line); border-radius: 14px 14px 14px 3px; padding: 11px 14px; }
+.hs-chat-reply { font-size: 13.5px; line-height: 1.5; color: var(--ink); background: var(--lime); border: 0.5px solid var(--lime-underline); border-radius: 14px 14px 3px 14px; padding: 10px 13px; }
+.hs-chat-composer {
+  display: flex; align-items: center; gap: 10px; margin-top: 2px;
+  background: var(--paper-white); border: 0.5px solid var(--line-warm); border-radius: 999px; padding: 5px 5px 5px 14px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.hs-chat-composer:hover { border-color: var(--ink-faint); }
+.hs-chat-composer:focus-within { border-color: var(--ink); box-shadow: 0 0 0 3px var(--lime-soft); }
+.hs-chat-input {
+  flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; padding: 4px 0;
+  font-family: var(--font-sans); font-size: 13.5px; color: var(--ink);
+}
+.hs-chat-input::placeholder { color: var(--ink-faint); }
+/* the trading-card tilt on the storyboard's two feature cards */
+.hs-tilt {
+  position: relative; transform-style: preserve-3d; will-change: transform;
+  transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 200ms ease-out, box-shadow 220ms ease;
+}
+.hs-tilt:hover { transform: perspective(1100px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.01); box-shadow: 0 12px 32px rgba(10, 12, 16, 0.12); z-index: 2; }
+.hs-chat-send { display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; background: var(--ink); cursor: pointer; transition: background 0.18s ease; }
+.hs-chat-send:hover { background: var(--lime-deep); }
+
 /* ── Breakpoints ────────────────────────────────────────────────────────── */
 @media (max-width: 859px) {
   .hero { grid-template-columns: minmax(0, 1fr); gap: 48px; }
@@ -216,4 +285,5 @@ a:hover { color: var(--ink); }
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
+  .hs-opt { transition: none; }
 }
